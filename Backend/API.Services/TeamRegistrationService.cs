@@ -14,7 +14,7 @@ namespace API.Services
     public class TeamRegistrationService
     {
 
-        public bool IsUsernameUnique(string username)
+        public bool IsUsernameValid(string username)
         {
             using (var context = new ApiGatewayContext())
             {
@@ -24,7 +24,7 @@ namespace API.Services
                                         .ToList();
 
                 // Return true if we couldn't find a match. And test for the length of the username.
-                return (teamNames.Count == 0) && username.Length > Constants.UsernameMin && username.Length < Constants.UsernameMax;
+                return teamNames.Count == 0 && username.Length > Constants.UsernameMin && username.Length < Constants.UsernameMax;
             }
         }
 

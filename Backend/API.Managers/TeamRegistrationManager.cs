@@ -18,7 +18,7 @@ namespace API.Managers
         public TeamRegisterResp CreateTeamAccount(TeamRegisterPost postInfo)
         {
             // Check If Username is Taken.
-            var nameResult = _teamRegistrationService.IsUsernameUnique(postInfo.CallbackUrl);
+            var nameResult = _teamRegistrationService.IsUsernameValid(postInfo.Username);
 
             // Check password strength.
             var passwordResult = _teamRegistrationService.IsPasswordValid(postInfo.Password);
