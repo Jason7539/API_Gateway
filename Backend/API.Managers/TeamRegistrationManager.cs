@@ -60,7 +60,7 @@ namespace API.Managers
                 var teamCreateResult = _teamRegistrationService.CreateTeam(postInfo, id, digest, clientDigest);
 
                 // Return response with all flags corresponding flags.
-                return new TeamRegisterResp(nameResult, passwordResult, websiteUrl, websiteValid, websiteAlive, callBackurl, callbackValid, callbackAlive, teamCreateResult);
+                return new TeamRegisterResp(nameResult, passwordResult, websiteUrl, websiteValid, websiteAlive, callBackurl, callbackValid, callbackAlive, teamCreateResult, id, clientSecret);
             }
         }
 

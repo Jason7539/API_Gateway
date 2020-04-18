@@ -17,10 +17,12 @@ namespace API.Models.json
         public bool CallbackAlive { get; set; }
 
         public bool TeamCreate { get; set; }
+        public string ClientId{ get; set; }
+        public string ClientSecret { get; set; }
 
 
         public TeamRegisterResp(bool nameUnique, bool passwordValid, bool websiteUnique, bool websiteValid, bool websiteAlive,
-                                bool callbackUnique, bool callbackValid, bool callbackAlive, bool teamCreate)
+                                bool callbackUnique, bool callbackValid, bool callbackAlive, bool teamCreate, string clientId="", string clientSecret="")
         {
             NameUnique = nameUnique;
             PasswordValid = passwordValid;
@@ -31,6 +33,8 @@ namespace API.Models.json
             CallbackValid = callbackValid;
             CallbackAlive = callbackAlive;
             TeamCreate = teamCreate;
+            ClientId = clientId;
+            ClientSecret = clientSecret;
         }
     }
 }
