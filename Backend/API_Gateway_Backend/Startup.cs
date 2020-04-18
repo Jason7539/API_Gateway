@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using API.Models.gateway;
+using API.Managers;
+using API.Services;
 
 namespace API_Gateway_Controllers
 {
@@ -26,6 +29,21 @@ namespace API_Gateway_Controllers
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<ApiGatewayContext>();
+
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()
+                                                             .AllowAnyHeader()
+                                                             .AllowAnyMethod());
+            });
+
+
+            // Register Services.
+            services.AddTransient<TeamRegistrationService>();
+
+            services.AddTransient<TeamRegistrationManager>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +53,8 @@ namespace API_Gateway_Controllers
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("AllowOrigin");
 
             app.UseHttpsRedirection();
 

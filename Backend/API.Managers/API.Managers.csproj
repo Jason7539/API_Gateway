@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\API.Constants\API.Constants.csproj" />
+    <ProjectReference Include="..\API.Models\API.Models.csproj" />
+    <ProjectReference Include="..\API.Services\API.Services.csproj" />
+  </ItemGroup>
+
+</Project>
