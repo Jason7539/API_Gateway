@@ -143,16 +143,16 @@ namespace API.Services
                 salt: salt,
                 prf: function,
                 iterationCount: iteration,
-                numBytesRequested: Constants.HashSize);
+                numBytesRequested: Constants.HashLength);
 
             // Create hash with the size of salt and key.
-            var hashed = new byte[Constants.HashSize + Constants.saltLength];
+            var hashed = new byte[Constants.HashLength + Constants.saltLength];
 
             // Copy the salt to the hashed array.
             Array.Copy(salt, 0, hashed, 0, Constants.saltLength);
 
             // Copy the key into the hashed array.
-            Array.Copy(key, 0, hashed, Constants.saltLength, Constants.HashSize);
+            Array.Copy(key, 0, hashed, Constants.saltLength, Constants.HashLength);
 
             return hashed;
         }

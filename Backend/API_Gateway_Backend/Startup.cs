@@ -41,8 +41,13 @@ namespace API_Gateway_Controllers
 
             // Register Services.
             services.AddTransient<TeamRegistrationService>();
+            services.AddTransient<TeamLoginService>();
+            services.AddTransient<JWTService>();
 
+
+            // Register Managers.
             services.AddTransient<TeamRegistrationManager>();
+            services.AddTransient<TeamLoginManager>();
             
         }
 

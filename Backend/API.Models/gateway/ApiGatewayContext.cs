@@ -1,4 +1,5 @@
 ﻿using System;
+using API.AppConstants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -24,7 +25,7 @@ namespace API.Models.gateway
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=localhost;user=root;database=api_gateway;port=3306;password=poop1234", x => x.ServerVersion("8.0.18-mysql"));
+                optionsBuilder.UseMySql(Constants.SQLConnection, x => x.ServerVersion("8.0.18-mysql"));
             }
         }
 
