@@ -21,44 +21,33 @@ namespace TestController
     {
         static void Main(string[] args)
         {
-            //using var context = new ApiGatewayContext();
-            //var teamName = context.Team
-
-            var tls = new TeamLoginService();
-
-            var username = "JASONJASON";
-            var pw = "passwordpassword123321";
-
-            Console.WriteLine("testing if username good: " + tls.CheckUsernameExistence("asda"));
-            Console.WriteLine("testing if password is good " + tls.ValidatePassword(username, pw, Constants.HashIteration, KeyDerivationPrf.HMACSHA256));
-
-
-            // Create the Signing key             using(RNGCryptoServiceProvider randomGen = new RNGCryptoServiceProvider())
-            //using (RNGCryptoServiceProvider randomGen = new RNGCryptoServiceProvider())
-            //{ 
-            //    var signingKey = new byte[32];
-
-            //    randomGen.GetBytes(signingKey);
-            //    Console.WriteLine("key is");
-            //    Console.WriteLine(Convert.ToBase64String(signingKey));
-
-            //}
 
 
 
-            var jwtService = new JWTService();
-        
+            /////////////////// MAKING TOKENS /////////////////
+            //var jwtService = new JWTService();    
 
-            var token = jwtService.GenerateHmacSignedJWTToken("myClient", "read", Constants.Issuer, DateTime.Now.ToUniversalTime(), DateTime.Now.AddDays(10).ToUniversalTime(),
-                                                    Constants.SigningKey);
-            // now we have string repre of token lets validate it
+            //var token = jwtService.GenerateHmacSignedJWTToken("myClient", "read", Constants.Issuer, DateTime.Now.ToUniversalTime(), DateTime.Now.AddDays(10).ToUniversalTime(),
+            //                                        Constants.SigningKey);
+            //// now we have string repre of token lets validate it
 
-            var handler = new JwtSecurityTokenHandler();
+            //var handler = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
-            // create fake key.
-            
+            //var claims = handler.Claims.Where(x => x.Type == "aud").FirstOrDefault().Value;
 
 
+            ////foreach (var item in claims)
+            ////{
+            ////    Console.WriteLine(item);
+            ////}
+            //Console.WriteLine(claims);
+            //// create fake key.
+
+            //Console.WriteLine(token);
+
+
+
+            /////////////////////// TESTING TOKEN VALIDITY /////////////////////////
             //var validationReq = new TokenValidationParameters();
             //validationReq.IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("asdasds"));
             //validationReq.ValidAudience = "myClient";
@@ -81,6 +70,15 @@ namespace TestController
             //var result = handler.ValidateToken(token, validationReq, out outToken);
 
             //Console.WriteLine(result);
+
+
+
+            //////////////////////// RANDOM TEST /////////////////
+            var testService = new TestService(new ApiGatewayContext());
+            Console.WriteLine(testService.GetTeams("JASONJASON"));
+
+            Console.WriteLine(testService.CheckIfServiceOwner("JASONJASON", "/gingmygoo"));
+
         }
 
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Managers;
 using API.Models.json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,12 @@ namespace API_Gateway_Controllers.Controllers
             }
         }
 
+        [Authorize(Policy = "IsOwner")]
+        [HttpGet("secure/{username}")]
+        public IActionResult Protected(string username)
+        {
+            return Ok("hello honey");
+        }
 
 
     }
