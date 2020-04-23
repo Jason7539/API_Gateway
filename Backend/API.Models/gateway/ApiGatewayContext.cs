@@ -1,4 +1,5 @@
 ﻿using System;
+using API.AppConstants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -24,7 +25,7 @@ namespace API.Models.gateway
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=localhost;user=root;database=api_gateway;port=3306;password=poop1234", x => x.ServerVersion("8.0.18-mysql"));
+                optionsBuilder.UseMySql(Constants.SQLConnection, x => x.ServerVersion("8.0.18-mysql"));
             }
         }
 
@@ -32,7 +33,8 @@ namespace API.Models.gateway
         {
             modelBuilder.Entity<Configuration>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.OpenTo, e.EndPoint })
+                    .HasName("PRIMARY");
 
                 entity.ToTable("configuration");
 
@@ -42,35 +44,33 @@ namespace API.Models.gateway
                 entity.HasIndex(e => e.OpenTo)
                     .HasName("owner_idx");
 
-                entity.Property(e => e.EndPoint)
-                    .IsRequired()
-                    .HasColumnName("end_point")
-                    .HasColumnType("varchar(500)")
+                entity.Property(e => e.OpenTo)
+                    .HasColumnName("open_to")
+                    .HasColumnType("varchar(200)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.OpenTo)
-                    .IsRequired()
-                    .HasColumnName("open_to")
-                    .HasColumnType("varchar(200)")
+                entity.Property(e => e.EndPoint)
+                    .HasColumnName("end_point")
+                    .HasColumnType("varchar(500)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.Steps)
                     .IsRequired()
                     .HasColumnName("steps")
-                    .HasColumnType("varchar(200)")
+                    .HasColumnType("varchar(400)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.HasOne(d => d.EndPointNavigation)
-                    .WithMany()
+                    .WithMany(p => p.Configuration)
                     .HasPrincipalKey(p => p.Endpoint)
                     .HasForeignKey(d => d.EndPoint)
                     .HasConstraintName("end_point");
 
                 entity.HasOne(d => d.OpenToNavigation)
-                    .WithMany()
+                    .WithMany(p => p.Configuration)
                     .HasForeignKey(d => d.OpenTo)
                     .HasConstraintName("owned_by");
             });
@@ -90,10 +90,34 @@ namespace API.Models.gateway
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.Dataformat)
+                    .HasColumnName("dataformat")
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Description)
+                    .HasColumnName("description")
+                    .HasColumnType("varchar(500)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
                 entity.Property(e => e.Endpoint)
                     .IsRequired()
                     .HasColumnName("endpoint")
                     .HasColumnType("varchar(500)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Input)
+                    .HasColumnName("input")
+                    .HasColumnType("varchar(50)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.Output)
+                    .HasColumnName("output")
+                    .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 

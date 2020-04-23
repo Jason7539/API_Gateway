@@ -36,13 +36,5 @@ namespace API_Gateway_Controllers.Controllers
                 return NotFound();
             }
         }
-
-
-
-        public bool DisplayClientInfo()
-        {
-            return true;
-        }
-
     }
 }

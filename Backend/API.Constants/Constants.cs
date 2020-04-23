@@ -4,8 +4,9 @@ namespace API.AppConstants
 {
     public static class Constants
     {
-
-        public static readonly string APISQLConnection = Environment.GetEnvironmentVariable("PRIVATE_KEY", EnvironmentVariableTarget.User);
+        // ENVIRONMENT VARIABLES
+        public static readonly string SigningKey = Environment.GetEnvironmentVariable("SIGNING_KEY", EnvironmentVariableTarget.User);
+        public static readonly string SQLConnection = Environment.GetEnvironmentVariable("API_SQL_CONNECTION", EnvironmentVariableTarget.User);
 
 
 
@@ -16,9 +17,17 @@ namespace API.AppConstants
         public static readonly int PasswordMax = 2000;
         public static readonly int SaltLength = 32;
         public static readonly string HttpHEAD = "HEAD";
-        public static readonly int HashSize = 32;
+        public static readonly int HashLength = 32;
         public static readonly int HashIteration = 10000;
         public static readonly int saltLength = 32;
+
+        // JWT INFORMATION
+        public static readonly string Issuer = "Spring2020APIGateway";      // TODO: update to api domain.
+        public static readonly string ClientId = "ClientId";
+        public static readonly string Scope = "Scope";
+        public static readonly int AuthenticationValidMinutes = 60;
+
+
 
     }
 }

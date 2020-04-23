@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace API.Models.json
 {
-    public class TeamRegisterPost
+    public class TeamLoginPost
     {
         [Required]
         public string Username { get; set; }
@@ -13,10 +13,5 @@ namespace API.Models.json
         [Required]
         public string Password { get; set; }
 
-        [Required]
-        public string WebsiteUrl { get; set; }
-
-        [Required]
-        public string  CallbackUrl { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace API.Models.gateway
     {
         public Team()
         {
+            Configuration = new HashSet<Configuration>();
             Service = new HashSet<Service>();
         }
 
@@ -17,6 +18,7 @@ namespace API.Models.gateway
         public string Digest { get; set; }
         public string Username { get; set; }
 
+        public virtual ICollection<Configuration> Configuration { get; set; }
         public virtual ICollection<Service> Service { get; set; }
     }
 }
