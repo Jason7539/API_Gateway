@@ -1,9 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  plugins: [createPersistedState()],
   state: {
     Username: "",
     AccessToken: "",
@@ -30,6 +32,12 @@ export default new Vuex.Store({
     UpdateLoggedIn({ commit }, newStatus) {
       commit("UpdateLoggedIn", newStatus);
     },
+    ResetState({commit})
+    {
+      commit("UpdateUsername", "");
+      commit("UpdateAccessToken", "");
+      commit("UpdateLoggedIn", false);
+    }
   },
   modules: {},
   getters: {
