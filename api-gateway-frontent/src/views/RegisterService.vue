@@ -1,5 +1,8 @@
 <template>
-  <div>register service</div>
+  <div>
+    <h1>Service Registration</h1>
+
+  </div>
 </template>
 
 <script>

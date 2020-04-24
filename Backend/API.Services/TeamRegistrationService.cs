@@ -20,23 +20,15 @@ namespace API.Services
             {
                 // Attempt to find a team with inputted username.
                 var teamNames = context.Team
-                                        .Where(team => team.Username == username)
+                                        .Where(team => username == team.Username)
                                         .ToList();
 
                 // Return true if we couldn't find a match. And test for the length of the username.
-                return teamNames.Count == 0 && username.Length > Constants.UsernameMin && username.Length < Constants.UsernameMax;
+                return teamNames.Count == 0 && username.Length >= Constants.UsernameMin && username.Length < Constants.UsernameMax;
             }
         }
 
-        public bool IsPasswordValid(string password)
-        {
-            // Check password size.
-            if (password.Length > Constants.PasswordMax || password.Length < Constants.PasswordMin)
-            {
-                return false;
-            }
-            return true;
-        }
+
 
         public bool IsCallBackURLUnique(string url)
         {
@@ -166,6 +158,20 @@ namespace API.Services
         {
             // Generate random password.
            return Convert.ToBase64String(GenerateSalt(Constants.saltLength));
+        }
+
+        public bool IsPasswordValid(string password)
+        {
+            // Check password size.
+            if (password.Length > Constants.PasswordMax || password.Length < Constants.PasswordMin)
+            {
+                return false;
+            }
+
+            // Check sequence for password.
+
+
+            return true;
         }
     }
 }

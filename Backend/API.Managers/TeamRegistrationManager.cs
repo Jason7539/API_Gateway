@@ -23,18 +23,33 @@ namespace API.Managers
             // Check password strength.
             var passwordResult = _teamRegistrationService.IsPasswordValid(postInfo.Password);
 
+            // Check that passwords and repeat passwords are equal.
+            passwordResult = postInfo.Password == postInfo.RepeatPassword;
+
             // Check If Website url is taken. Then Check if valid and if its alive.
             var websiteUrl = _teamRegistrationService.IsWebsiteURLUnique(postInfo.WebsiteUrl);
             var websiteValid = _teamRegistrationService.IsUrlValid(postInfo.WebsiteUrl);
-            var websiteAlive = _teamRegistrationService.IsUrlValid(postInfo.WebsiteUrl);
+
+            var websiteAlive = false;
+            if (websiteValid)
+            {
+                websiteAlive = _teamRegistrationService.IsUrlAlive(postInfo.WebsiteUrl);
+            }
+            
 
             // Check if  callback url is taken. Then Check if valid and if its alive.
             var callBackurl = _teamRegistrationService.IsCallBackURLUnique(postInfo.CallbackUrl);
             var callbackValid = _teamRegistrationService.IsUrlValid(postInfo.CallbackUrl);
-            var callbackAlive = _teamRegistrationService.IsUrlAlive(postInfo.CallbackUrl);
+
+            var callbackAlive = false;
+            if(callbackValid)
+            {
+                callbackAlive = _teamRegistrationService.IsUrlAlive(postInfo.CallbackUrl);
+
+            }
 
             // If any of the above flags are false return json Object containing error info.
-            if(!(nameResult && passwordResult && websiteUrl && websiteValid && websiteAlive && callBackurl && callbackValid && callbackAlive))
+            if (!(nameResult && passwordResult && websiteUrl && websiteValid && websiteAlive && callBackurl && callbackValid && callbackAlive))
             {
                 return new TeamRegisterResp(nameResult, passwordResult, websiteUrl, websiteValid, websiteAlive, callBackurl, callbackValid, callbackAlive, false);
             }

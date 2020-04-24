@@ -1,14 +1,14 @@
 <template>
   <v-app>
-    <v-app-bar app="true" color="deep-purple accent-4" dark="true">
+    <v-app-bar :app="true" color="deep-purple accent-4" :dark="true">
       <v-toolbar-title>Web API Gateway</v-toolbar-title>
     </v-app-bar>
 
 
-    <v-navigation-drawer app="true" expand-on-hover="true">
+    <v-navigation-drawer :app="true" :expand-on-hover="true">
       <v-list-item v-for="item in list" :key="item.title" :to="item.link">
         <v-list-item-content>
-          <v-list-tile :to="item.link">{{ item.title }}</v-list-tile>
+          <v-list-item :to="item.link">{{ item.title }}</v-list-item>
         </v-list-item-content>
       </v-list-item>
     </v-navigation-drawer>
