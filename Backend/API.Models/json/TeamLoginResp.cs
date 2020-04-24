@@ -8,6 +8,7 @@ namespace API.Models.json
     {
         public bool Status { get; set; }
         public string AccessToken{ get; set; }
+        public string Username{ get; set; }
 
     }
 }

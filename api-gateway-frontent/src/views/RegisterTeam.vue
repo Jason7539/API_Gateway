@@ -77,10 +77,12 @@ export default {
         (v) => !!v || "Username is required",
         (v) =>
           v.length >= 4 || "Username must be greater or equal to 4 characters",
+          (v) => v.length < 200 || "Username must be less than 200 characters"
       ],
       PasswordRules: [
         (v) => !!v || "Password is required",
         (v) => v.length >= 12 || "Password must be greater or equal to 12",
+        (v) => v ==this.$data.RepeatPassword || "Passwords are not equal",
         (v) => v.length < 2000 || "Password  must be less than 2000",
       ],
       RepeatPasswordRules: [
@@ -100,7 +102,7 @@ export default {
 
       // If the form is valid submit to backend.
       if (formValid) {
-        // If the form is valid submit post request.
+        // Submit post request.
         fetch(`${global.ApiDomainName}/api/TeamRegistration/CreateTeam`, {
           method: "POST",
           mode: "cors",
@@ -118,10 +120,12 @@ export default {
           }),
         })
           .then((response) => {
-            if(response.status >= 400)
+            // Throw exception if status code is above 400.
+            if(!response.ok)
             {
-              throw "response failure";
+              throw Error("response error");
             }
+            // Process response as json.
             return response.json()})
           .then((data) => {
             // If we get a successful response back.
@@ -143,6 +147,7 @@ export default {
               // If the team creation is unsuccessful tell user what was wrong.
               var errorMesssage = "";
 
+              // Proccess json response to form error message.
               if (!data.nameUnique) {
                 errorMesssage +=
                   "name may not be unique or does not meet length requirements. length has to be less than 200 and greater than 4." +

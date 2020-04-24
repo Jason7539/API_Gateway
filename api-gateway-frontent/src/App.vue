@@ -4,15 +4,22 @@
       <v-toolbar-title>Web API Gateway</v-toolbar-title>
     </v-app-bar>
 
-
     <v-navigation-drawer :app="true" :expand-on-hover="true">
-      <v-list-item v-for="item in list" :key="item.title" :to="item.link">
-        <v-list-item-content>
-          <v-list-item :to="item.link">{{ item.title }}</v-list-item>
-        </v-list-item-content>
-      </v-list-item>
+      <div v-if="!this.$store.state.LoggedIn">
+        <v-list-item v-for="item in DefaultList" :key="item.title" :to="item.link">
+          <v-list-item-content>
+            <v-list-item :to="item.link">{{ item.title }}</v-list-item>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+      <div v-if="this.$store.state.LoggedIn">
+        <v-list-item v-for="item in LoggedInList" :key="item.title" :to="item.link">
+          <v-list-item-content>
+            <v-list-item :to="item.link">{{ item.title }}</v-list-item>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
     </v-navigation-drawer>
-
 
     <v-content>
       <router-view></router-view>
@@ -28,10 +35,21 @@ export default {
 
   data() {
     return {
-      list: [
+      DefaultList: [
         { title: "Home", link: "/" },
         { title: "Login", link: "Login" },
         { title: "Register Team", link: "RegisterTeam" },
+
+        // TO UPDATED.
+        { title: "Register Services", link: "RegisterService" },
+        { title: "Manage Services", link: "ManageService" },
+        { title: "Manage Team", link: "ManageTeam" },
+        { title: "Service Discovery", link: "ServiceDiscovery" },
+
+
+        { title: "About", link: "About" },
+      ],
+      LoggedInList: [
         { title: "Register Services", link: "RegisterService" },
         { title: "Manage Services", link: "ManageService" },
         { title: "Manage Team", link: "ManageTeam" },

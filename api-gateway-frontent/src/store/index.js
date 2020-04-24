@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     Username: "",
     AccessToken: "",
+    LoggedIn: false,
   },
   mutations: {
     UpdateUsername(state, newUsername) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     UpdateAccessToken(state, newAccessToken) {
       state.AccessToken = newAccessToken;
+    },
+    UpdateLoggedIn(state, newStatus) {
+      state.LoggedIn = newStatus;
     },
   },
   actions: {
@@ -23,11 +27,14 @@ export default new Vuex.Store({
     UpdateAccessToken({ commit }, newAccessToken) {
       commit("UpdateAccessToken", newAccessToken);
     },
+    UpdateLoggedIn({ commit }, newStatus) {
+      commit("UpdateLoggedIn", newStatus);
+    },
   },
   modules: {},
   getters: {
-    value: (state) => {
-      return state.value;
+    Username: (state) => {
+      return state.Username;
     },
   },
 });
