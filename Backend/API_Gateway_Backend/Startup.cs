@@ -13,6 +13,12 @@ using Microsoft.Extensions.Logging;
 using API.Models.gateway;
 using API.Managers;
 using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using API.AppConstants;
+using API.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace API_Gateway_Controllers
 {
@@ -29,8 +35,10 @@ namespace API_Gateway_Controllers
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<ApiGatewayContext>();
 
+            // Add Db context in a scoped lifetime. One new up per request and prevents concurrency issues.
+            services.AddDbContext<ApiGatewayContext>();
+            services.AddHttpContextAccessor();
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()
@@ -39,11 +47,45 @@ namespace API_Gateway_Controllers
             });
 
 
+            // Register Authentication middleware.
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(requirements =>
+            {
+                requirements.TokenValidationParameters = new TokenValidationParameters
+                {
+                    // Signing key to test.
+                    IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(Constants.SigningKey)),
+
+                    ValidateIssuerSigningKey = true,        // Test that the signing key is valid.
+                    RequireSignedTokens = true,             // Test that tokens are signed.
+                    ValidateIssuer = true,                  // Test that the issuer matches the server.
+                    ValidateLifetime = true,                // Test that the expiration time has not passed.
+                    ValidateAudience = false,               // HACK: Temporary making audience not checked
+                    
+
+                    ValidIssuer = Constants.Issuer          // Issuer to compare token against.
+                    
+                };
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsOwner", policy => policy.Requirements.Add(new ManageServiceRequirement()));
+            });
+
+            // Add authorization handlers.
+            services.AddTransient<IAuthorizationHandler, ManageServiceAuthorizationHandler>();
+
+
+
             // Register Services.
             services.AddTransient<TeamRegistrationService>();
             services.AddTransient<TeamLoginService>();
             services.AddTransient<JWTService>();
-
+            //services.AddTransient<HttpContext>();
 
             // Register Managers.
             services.AddTransient<TeamRegistrationManager>();
@@ -64,6 +106,9 @@ namespace API_Gateway_Controllers
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // Enable the use of the JWT authentication middleware.
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

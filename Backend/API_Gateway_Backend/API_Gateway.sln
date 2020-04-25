@@ -27,6 +27,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models And JsonObj", "Model
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{E6377431-7E6E-4265-B1DD-A39736F8453F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authorization", "Authorization", "{A2BAB29E-A432-40BA-AC61-CA6B11B4042D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Authorization", "..\API.Authorization\API.Authorization.csproj", "{319BD117-093F-49FE-9A11-04EEFE1568BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +65,10 @@ Global
 		{F425CCE6-8EC0-44B1-AF2A-24A9383C15DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F425CCE6-8EC0-44B1-AF2A-24A9383C15DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F425CCE6-8EC0-44B1-AF2A-24A9383C15DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{319BD117-093F-49FE-9A11-04EEFE1568BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{319BD117-093F-49FE-9A11-04EEFE1568BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{319BD117-093F-49FE-9A11-04EEFE1568BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{319BD117-093F-49FE-9A11-04EEFE1568BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +79,7 @@ Global
 		{D7C5F4A6-AC89-41FF-873C-C828B5DF1AE1} = {EBCAA90C-98D8-469A-851F-630E61897C3F}
 		{88AE11EC-250C-4D4E-B69B-C2E34054D0CC} = {CC85C87A-FEE6-4B2D-9F23-A635368C8BE2}
 		{F425CCE6-8EC0-44B1-AF2A-24A9383C15DB} = {266A06B7-73B3-437D-9148-335B62CFFCEE}
+		{319BD117-093F-49FE-9A11-04EEFE1568BC} = {A2BAB29E-A432-40BA-AC61-CA6B11B4042D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FE86329D-3752-42EF-8C77-CFC62F9B4C3A}
