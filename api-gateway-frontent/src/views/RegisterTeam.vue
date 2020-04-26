@@ -164,7 +164,7 @@ export default {
               }
 
               if (!data.websiteValid) {
-                errorMesssage += "Website is not valid" + "\n";
+                errorMesssage += "Website is not valid or not https." + "\n";
               }
 
               if (!data.websiteAlive) {

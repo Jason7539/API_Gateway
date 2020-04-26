@@ -10,9 +10,11 @@ namespace API.Managers
     public class TeamRegistrationManager
     {
         private readonly TeamRegistrationService _teamRegistrationService;
-        public TeamRegistrationManager(TeamRegistrationService teamRegistrationService)
+        private readonly UrlValidationService _urlValidationService;
+        public TeamRegistrationManager(TeamRegistrationService teamRegistrationService, UrlValidationService urlValidationService)
         {
             _teamRegistrationService = teamRegistrationService;
+            _urlValidationService = urlValidationService;
         }
 
         public TeamRegisterResp CreateTeamAccount(TeamRegisterPost postInfo)
@@ -26,25 +28,27 @@ namespace API.Managers
             // Check that passwords and repeat passwords are equal.
             passwordResult = postInfo.Password == postInfo.RepeatPassword;
 
-            // Check If Website url is taken. Then Check if valid and if its alive.
-            var websiteUrl = _teamRegistrationService.IsWebsiteURLUnique(postInfo.WebsiteUrl);
-            var websiteValid = _teamRegistrationService.IsUrlValid(postInfo.WebsiteUrl);
+            // Check If Website url is taken. Then Check if valid, if its alive and its https.
+            var websiteUrl = _urlValidationService.IsWebsiteURLUnique(postInfo.WebsiteUrl);
+            var websiteValid = _urlValidationService.IsUrlValid(postInfo.WebsiteUrl);
+            websiteValid &= _urlValidationService.IsUrlHttps(postInfo.WebsiteUrl);
 
             var websiteAlive = false;
             if (websiteValid)
             {
-                websiteAlive = _teamRegistrationService.IsUrlAlive(postInfo.WebsiteUrl);
+                websiteAlive = _urlValidationService.IsUrlAlive(postInfo.WebsiteUrl);
             }
             
 
-            // Check if  callback url is taken. Then Check if valid and if its alive.
-            var callBackurl = _teamRegistrationService.IsCallBackURLUnique(postInfo.CallbackUrl);
-            var callbackValid = _teamRegistrationService.IsUrlValid(postInfo.CallbackUrl);
+            // Check if  callback url is taken. Then Check if valid, if its alive and its https.
+            var callBackurl = _urlValidationService.IsCallBackURLUnique(postInfo.CallbackUrl);
+            var callbackValid = _urlValidationService.IsUrlValid(postInfo.CallbackUrl);
+            callbackValid &= _urlValidationService.IsUrlHttps(postInfo.CallbackUrl);
 
             var callbackAlive = false;
             if(callbackValid)
             {
-                callbackAlive = _teamRegistrationService.IsUrlAlive(postInfo.CallbackUrl);
+                callbackAlive = _urlValidationService.IsUrlAlive(postInfo.CallbackUrl);
 
             }
 

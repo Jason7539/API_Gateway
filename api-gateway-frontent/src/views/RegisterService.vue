@@ -70,7 +70,7 @@
       <div v-if="StepsDefault >= 1">
         <v-row>
           <v-col>
-            <v-text-field v-model="RouteOne" label="Url For 1st action" ></v-text-field>
+            <v-text-field v-model="RouteOne" label="Https url For 1st action" ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field v-model="ParameterNameOne" label="Parameter Name" hint="StoreId, IngredientId"></v-text-field>
@@ -90,7 +90,7 @@
       <div v-if="StepsDefault >= 2">
         <v-row>
           <v-col>
-            <v-text-field v-model="RouteTwo" label="Url For 2nd action" ></v-text-field>
+            <v-text-field v-model="RouteTwo" label="Https url For 2nd action" ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field v-model="ParameterNameTwo" label="Parameter Name" hint="StoreId, IngredientId"></v-text-field>
@@ -110,7 +110,7 @@
       <div v-if="StepsDefault >= 3">
         <v-row>
           <v-col>
-            <v-text-field v-model="RouteThree" label="Url For 3rd action" ></v-text-field>
+            <v-text-field v-model="RouteThree" label="Https url For 3rd action" ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field v-model="ParameterNameThree" label="Parameter Name" hint="StoreId, IngredientId"></v-text-field>
@@ -130,7 +130,7 @@
       <div v-if="StepsDefault >= 4">
         <v-row>
           <v-col>
-            <v-text-field v-model="RouteFour" label="Url For 4th action" ></v-text-field>
+            <v-text-field v-model="RouteFour" label="Https url For 4th action" ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field v-model="ParameterNameFour" label="Parameter Name" hint="StoreId, IngredientId"></v-text-field>
@@ -305,16 +305,41 @@ export default {
           {
             throw Error("response error");
           }
-          console.log(response);
           
           // Process response as json.
-          if(response.ok){
-            // If we successfully created service tell the user. And reset form.
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+
+          // Display result dialog based on server response.
+          if(data.status)
+          {
             this.DialogHeadline = "Service successfully created";
+            this.DialogMessage = "";
             this.dialog = true;
             this.$refs.form.reset();
-
           }
+          else
+          {
+            // If service creation failed craft message about why.
+            let errorMessage = "";
+            
+            if(!data.endpointResult)
+            {
+              errorMessage += "Route to access is taken. \n";
+            }
+            if(!data.websiteValid)
+            {
+              errorMessage += "One of the action url is not valid or not https. \n";
+            }
+
+            // Display dialog.
+            this.DialogHeadline = "Failed to create service";
+            this.DialogMessage = errorMessage;
+            this.dialog = true;
+          }
+
         })
         .catch(() => {
           this.DialogHeadline = "Unexpected exception Please try again later";
@@ -362,7 +387,6 @@ export default {
         throw Error("response error");
       }
 
-      console.log(response);
       return response.json()
     })
     .then((data) => 

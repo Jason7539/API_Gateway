@@ -86,6 +86,7 @@ namespace API_Gateway_Controllers
             services.AddTransient<TeamLoginService>();
             services.AddTransient<JWTService>();
             services.AddTransient<ServiceManagementService>();
+            services.AddTransient<UrlValidationService>();
 
             //services.AddTransient<HttpContext>();
 
