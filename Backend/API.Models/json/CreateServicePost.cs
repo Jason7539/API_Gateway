@@ -6,7 +6,6 @@ namespace API.Models.json
 {
     public class CreateServicePost
     {
-        public bool Status { get; set; }
         public string Username { get; set; }
         public string ClientId { get; set; }
         public string RouteToAccess { get; set; }

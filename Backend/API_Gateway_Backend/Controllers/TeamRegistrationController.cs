@@ -30,10 +30,11 @@ namespace API_Gateway_Controllers.Controllers
             try
             {
                 return Ok(_teamRegistrationManager.CreateTeamAccount(postInfo));
+
             }
             catch
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

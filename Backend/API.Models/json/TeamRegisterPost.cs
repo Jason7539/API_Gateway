@@ -12,6 +12,10 @@ namespace API.Models.json
 
         [Required]
         public string Password { get; set; }
+        
+        [Required]
+        public string RepeatPassword { get; set; }
+
 
         [Required]
         public string WebsiteUrl { get; set; }

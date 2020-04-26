@@ -15,6 +15,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+using Newtonsoft.Json;
 namespace TestController
 {
     class Program
@@ -74,12 +75,29 @@ namespace TestController
 
 
             //////////////////////// RANDOM TEST /////////////////
-            var testService = new TestService(new ApiGatewayContext());
-            Console.WriteLine(testService.GetTeams("JASONJASON"));
 
-            Console.WriteLine(testService.CheckIfServiceOwner("JASONJASON", "/gingmygoo"));
+            var sms = new ServiceManagementService(new ApiGatewayContext());
 
+            Console.WriteLine(sms.IsServiceEndpointUnique("moogles"));
+            //var teams = sms.GetTeamsUsername();
+
+            //foreach(var t in teams)
+            //{
+            //    Console.WriteLine(t);
+            //}
+
+            string config = "{\"Steps\":1,\"ReturnStep\":1,\"Configurations\":[{\"Action\":\"asdasd\",\"ParameterNames\":\"asdf,asdf\",\"ParameterDataTypes\":\"string, int\",\"HttpMethod\":\"GET\",\"Async\":false},{\"Action\":\"\",\"ParameterNames\":\"\",\"ParameterDataTypes\":\"\",\"HttpMethod\":\"GET\",\"Async\":false},{\"Action\":\"\",\"ParameterNames\":\"\",\"ParameterDataTypes\":\"\",\"HttpMethod\":\"GET\",\"Async\":false},{\"Action\":\"\",\"ParameterNames\":\"\",\"ParameterDataTypes\":\"\",\"HttpMethod\":\"GET\",\"Async\":false}]}";
+
+            //var configjson = JsonSerializer.Deserialize<ServiceConfiguration>(config);  // system.text
+
+            var configjson = JsonConvert.DeserializeObject<ServiceConfiguration>(config);
+
+
+
+            var balh = "asdasd";
+            Console.WriteLine("gingoo");
         }
+
 
     }
 }

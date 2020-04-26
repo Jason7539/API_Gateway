@@ -24,21 +24,31 @@ namespace API.Managers
         public TeamLoginResp TeamLogin(TeamLoginPost postInfo)
         {
             var userNameExist = _teamLoginService.CheckUsernameExistence(postInfo.Username);
-            var passwordValid = _teamLoginService.ValidatePassword(postInfo.Username, postInfo.Password, Constants.HashIteration, KeyDerivationPrf.HMACSHA256);
-
-            if(userNameExist && passwordValid)
+            var passwordValid = false;
+            
+            // If the userNameExist then we grab the password
+            if(userNameExist)
             {
-                // May need to get clientId rather than username.
+                passwordValid = _teamLoginService.ValidatePassword(postInfo.Username, postInfo.Password, Constants.HashIteration, KeyDerivationPrf.HMACSHA256);
+            }
+
+
+            if (userNameExist && passwordValid)
+            {
+                // Grab ClientId to return to frontend.
+                var clientId = _teamLoginService.GetClientIdFromUsername(postInfo.Username);
                 return new TeamLoginResp()
                 {
                     Status = true,
                     AccessToken = _JWTService.GenerateHmacSignedJWTToken(postInfo.Username, postInfo.Username, Constants.Issuer, DateTime.Now.ToUniversalTime(),
-                                DateTime.Now.AddMinutes(Constants.AuthenticationValidMinutes).ToUniversalTime(), Constants.SigningKey)
+                                DateTime.Now.AddMinutes(Constants.AuthenticationValidMinutes).ToUniversalTime(), Constants.SigningKey),
+                    Username = postInfo.Username,
+                    ClientId = clientId
                 };
             }
             else
             {
-                return new TeamLoginResp() { Status = false, AccessToken = null };
+                return new TeamLoginResp() { Status = false, AccessToken = null, Username = null, ClientId = null };
             }
 
         }

@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\API.Constants\API.Constants.csproj" />
+    <ProjectReference Include="..\API.DAL\API.DAL.csproj" />
     <ProjectReference Include="..\API.Models\API.Models.csproj" />
   </ItemGroup>
 

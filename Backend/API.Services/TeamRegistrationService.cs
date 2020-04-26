@@ -20,87 +20,14 @@ namespace API.Services
             {
                 // Attempt to find a team with inputted username.
                 var teamNames = context.Team
-                                        .Where(team => team.Username == username)
+                                        .Where(team => username == team.Username)
                                         .ToList();
 
                 // Return true if we couldn't find a match. And test for the length of the username.
-                return teamNames.Count == 0 && username.Length > Constants.UsernameMin && username.Length < Constants.UsernameMax;
+                return teamNames.Count == 0 && username.Length >= Constants.UsernameMin && username.Length < Constants.UsernameMax;
             }
         }
 
-        public bool IsPasswordValid(string password)
-        {
-            // Check password size.
-            if (password.Length > Constants.PasswordMax || password.Length < Constants.PasswordMin)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public bool IsCallBackURLUnique(string url)
-        {
-            using (var context = new ApiGatewayContext())
-            {
-                // Attempt to find a team call back url with inputted url.
-                var callBackUrls = context.Team
-                                        .Where(s => s.CallbackUrl == url)
-                                        .ToList();
-
-                // Return true if url is unique.
-                return callBackUrls.Count == 0;
-            }
-        }
-
-        public bool IsWebsiteURLUnique(string url)
-        {
-            using (var context = new ApiGatewayContext())
-            {
-                // Attempt to find a team website url with inputted url.
-                var websiteUrls = context.Team
-                                    .Where(s => s.WebsiteUrl == url)
-                                    .ToList();
-
-                // Return true if url is unique.
-                return websiteUrls.Count == 0;
-            }
-        }
-
-        public bool IsUrlHttps(string url)
-        {
-            var urlCheck = new Uri(url);
-            
-            return urlCheck.Scheme == Uri.UriSchemeHttps;
-        }
-
-        public bool IsUrlValid(string url)
-        {
-            try
-            {
-                var urlCheck = new Uri(url);
-                return true;
-            }
-            catch(System.UriFormatException)
-            {
-                return false;
-            }
-        }
-
-        public bool IsUrlAlive(string url)
-        {
-    
-            var webRequest =  WebRequest.Create(url) as HttpWebRequest;
-
-            // Set the HTTP method to: HEAD.
-            webRequest.Method = Constants.HttpHEAD;
-
-            // Get the resonse from the request.
-            using (var response = webRequest.GetResponse() as HttpWebResponse)
-            {
-                // Return true if we get an 200 status code.
-                return response.StatusCode == HttpStatusCode.OK;
-            }
-        }
 
         public bool CreateTeam(TeamRegisterPost postInfo, string clientId, byte[] digest, byte[] clientDigest)
         {
@@ -166,6 +93,20 @@ namespace API.Services
         {
             // Generate random password.
            return Convert.ToBase64String(GenerateSalt(Constants.saltLength));
+        }
+
+        public bool IsPasswordValid(string password)
+        {
+            // Check password size.
+            if (password.Length > Constants.PasswordMax || password.Length < Constants.PasswordMin)
+            {
+                return false;
+            }
+
+            // Check sequence for password.
+
+
+            return true;
         }
     }
 }
