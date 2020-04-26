@@ -12,7 +12,7 @@ namespace API.Services
     {
         IStep Next{get;set;}
         void SetNext(IStep step);
-        void Execute(RouterContext context);
+        void Execute();
         
     }
 }

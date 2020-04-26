@@ -7,6 +7,7 @@ namespace API.Services
     public class LLFireForgetRouterAsync
     {
         public RouterContext Context { get; set; }
+        public IStep [] Steps { get; set; }
         public IStep Head
         {
             get
@@ -26,7 +27,12 @@ namespace API.Services
             }
         }
 
-        public LLFireForgetRouterAsync() { }
+        public LLFireForgetRouterAsync(int stepCount) 
+        {
+            Steps = new IStep[stepCount];
+        }
+
+
 
 
     }

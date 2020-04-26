@@ -1,4 +1,5 @@
 ﻿using API.Models.gateway;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,20 @@ namespace API.Services
 
         public ILLRouter Build(string serviceConfigId)
         {
+            var configData;
             using (var context = new ApiGatewayContext())
             {
-                var configData = context.Configuration.Where(con => con.EndPoint.Equals(serviceConfigId));
+                configData = context.Configuration.Where(con => con.EndPoint.Equals(serviceConfigId));
             }
 
-                var fireForgetRouter = new LLFireForgetRouterAsync();
-
+            var array = JArray.Parse(configData);
+            var fireForgetRouter = new LLFireForgetRouterAsync(array.Count());
+            var iter = 0;
+            foreach(JObject setup in array)
+            {
+                IStep step = new Step();
+                step.Async=setup.GetValue("Async");
+            }
             
 
 

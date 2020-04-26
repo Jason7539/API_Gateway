@@ -7,6 +7,12 @@ namespace API.Services
     class Step : IStep
     {
         public IStep Next { get; set; }
+        public bool Async { get; set; }
+        public string Action { get; set; }
+        public bool OutputRequired { get; set; }
+        public string[] ArrayParameterTypes { get; set; }
+        public string[] ArrayParameterNames { get; set; }
+
 
         public Step()
         { }
@@ -22,7 +28,7 @@ namespace API.Services
             }
         }
 
-        public void Execute(RouterContext context)
+        public void Execute()
         {
 
         }
