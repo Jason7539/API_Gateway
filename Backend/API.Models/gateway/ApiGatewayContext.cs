@@ -59,7 +59,7 @@ namespace API.Models.gateway
                 entity.Property(e => e.Steps)
                     .IsRequired()
                     .HasColumnName("steps")
-                    .HasColumnType("varchar(400)")
+                    .HasColumnType("varchar(10000)")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
