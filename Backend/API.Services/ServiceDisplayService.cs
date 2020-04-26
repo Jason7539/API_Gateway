@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using API.DAL;
 using API.Models.gateway;
-using DataAccessLayer;
 
-namespace ServiceLayer
+namespace API.Services
 {
     public class ServiceDisplayService
     {
