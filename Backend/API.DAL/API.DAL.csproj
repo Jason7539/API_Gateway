@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\API.Constants\API.Constants.csproj" />
+    <ProjectReference Include="..\API.Models\API.Models.csproj" />
   </ItemGroup>
 
 </Project>
