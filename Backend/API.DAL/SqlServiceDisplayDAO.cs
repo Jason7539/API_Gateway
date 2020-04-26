@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using API.Models.gateway;
 
-namespace DataAccessLayer
+namespace API.DAL
 {
     public class SqlServiceDisplayDAO : IServiceDisplayDAO
     {
@@ -23,8 +23,13 @@ namespace DataAccessLayer
             //IfPublic 0 = private 1 = public
             using (_dbContext)
             {
-                var endPointList = _dbContext.Configuration.SingleOrDefault(a => a.OpenTo == teamName).EndPoint;
-                return _dbContext.Service.Where(a => endPointList.Contains(a.Endpoint)).OrderBy(a => a.Id).ToList();
+                if (!_dbContext.Configuration.Any())
+                    return null;
+                else
+                {
+                    var endPointList = _dbContext.Configuration.SingleOrDefault(a => a.OpenTo == teamName).EndPoint;
+                        return _dbContext.Service.Where(a => endPointList.Contains(a.Endpoint)).OrderBy(a => a.Id).ToList();
+                }
             }
         }
 
@@ -35,7 +40,7 @@ namespace DataAccessLayer
                 return false;
             using (_dbContext)
             {
-                if (_dbContext.Service.Any(a => a.Owner == teamName))
+                if (_dbContext.Team.Any(a => a.ClientId == teamName))
                     return true;
                 else
                     return false;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using API.Models.gateway;
 using DataAccessLayer;
 
-namespace ServiceLayer
+namespace API.Services
 {
     public class ServiceDisplayService
     {

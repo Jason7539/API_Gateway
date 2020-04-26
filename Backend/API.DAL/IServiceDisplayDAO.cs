@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using API.Models.gateway;
 
-namespace DataAccessLayer
+namespace API.DAL
 {
     public interface IServiceDisplayDAO
     {
