@@ -5,6 +5,7 @@
         v-model="Username"
         label="Username"
         :rules="UsernameRules"
+        v-on:keydown.enter="Login"
         required
       ></v-text-field>
       <v-text-field
@@ -12,6 +13,7 @@
         v-model="Password"
         label="Password"
         :rules="PasswordRules"
+        v-on:keydown.enter="Login"
         required
       ></v-text-field>
       <ErrorStatus
@@ -91,6 +93,7 @@ export default {
               // Login was successful: store access token, username and updated loggedIn status.
               this.$store.dispatch("UpdateUsername", data.username);
               this.$store.dispatch("UpdateAccessToken", data.accessToken);
+              this.$store.dispatch("UpdateClientId", data.clientId);
               this.$store.dispatch("UpdateLoggedIn", true);
 
               // Take User to login page when they successful log in.

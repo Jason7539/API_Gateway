@@ -35,18 +35,20 @@ namespace API.Managers
 
             if (userNameExist && passwordValid)
             {
-                // May need to get clientId rather than username.
+                // Grab ClientId to return to frontend.
+                var clientId = _teamLoginService.GetClientIdFromUsername(postInfo.Username);
                 return new TeamLoginResp()
                 {
                     Status = true,
                     AccessToken = _JWTService.GenerateHmacSignedJWTToken(postInfo.Username, postInfo.Username, Constants.Issuer, DateTime.Now.ToUniversalTime(),
                                 DateTime.Now.AddMinutes(Constants.AuthenticationValidMinutes).ToUniversalTime(), Constants.SigningKey),
-                    Username = postInfo.Username
+                    Username = postInfo.Username,
+                    ClientId = clientId
                 };
             }
             else
             {
-                return new TeamLoginResp() { Status = false, AccessToken = null, Username = null };
+                return new TeamLoginResp() { Status = false, AccessToken = null, Username = null, ClientId = null };
             }
 
         }

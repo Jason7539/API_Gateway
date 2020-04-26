@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Team Registration</h1>
-    <v-form ref="form" :lazy-validation="true">
+    <v-form ref="form" :lazy-validation="false">
       <v-text-field
         v-model="Username"
         label="Username"

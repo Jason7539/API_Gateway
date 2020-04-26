@@ -10,6 +10,7 @@ export default new Vuex.Store({
     Username: "",
     AccessToken: "",
     LoggedIn: false,
+    ClientId: ""
   },
   mutations: {
     UpdateUsername(state, newUsername) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     UpdateLoggedIn(state, newStatus) {
       state.LoggedIn = newStatus;
     },
+    UpdateClientId(state, newClientId){
+      state.ClientId = newClientId;
+    }
   },
   actions: {
     UpdateUsername({ commit }, newUsername) {
@@ -32,11 +36,15 @@ export default new Vuex.Store({
     UpdateLoggedIn({ commit }, newStatus) {
       commit("UpdateLoggedIn", newStatus);
     },
+    UpdateClientId({commit}, newClientId){
+      commit("UpdateClientId", newClientId);
+    },
     ResetState({commit})
     {
       commit("UpdateUsername", "");
       commit("UpdateAccessToken", "");
       commit("UpdateLoggedIn", false);
+      commit("UpdateClientId", "");
     }
   },
   modules: {},

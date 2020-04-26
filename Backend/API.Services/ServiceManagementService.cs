@@ -2,6 +2,7 @@
 using API.Models.json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace API.Services
@@ -24,11 +25,21 @@ namespace API.Services
 
 
             // Loop the OpenTo array make a configuration for every team.
-            
+
+            _context.Service.Add(newService);
+            _context.SaveChanges();
 
             return true;
         }
 
+        public List<string> GetTeamsUsername()
+        {
+            // Query to get all the team's username.
+            var teams = _context.Team.
+                        Select(team => team.Username).ToList();
+            
+            return teams;
 
+        }
     }
 }

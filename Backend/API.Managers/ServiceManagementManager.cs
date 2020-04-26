@@ -26,5 +26,11 @@ namespace API.Managers
             return _serviceManagementService.CreateService(createServicePost);
         }
 
+        public GetTeamsResp GetTeamsUsername()
+        {
+            return new GetTeamsResp() { Teams = _serviceManagementService.GetTeamsUsername() };
+        }
+
+
     }
 }

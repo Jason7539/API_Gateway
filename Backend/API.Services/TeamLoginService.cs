@@ -60,5 +60,19 @@ namespace API.Services
 
         }
 
+        public string GetClientIdFromUsername(string username)
+        {
+            using(var context = new ApiGatewayContext())
+            {
+                // Get a teams ClientId using its username.
+                var ClientIds = context.Team
+                                .Where(team => username == team.Username)
+                                .Select(team => new { team.ClientId })
+                                .ToList()[0].ClientId;
+                return ClientIds;
+            }
+
+        }
+
     }
 }

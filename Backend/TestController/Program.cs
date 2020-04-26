@@ -74,12 +74,17 @@ namespace TestController
 
 
             //////////////////////// RANDOM TEST /////////////////
-            var testService = new TestService(new ApiGatewayContext());
-            Console.WriteLine(testService.GetTeams("JASONJASON"));
 
-            Console.WriteLine(testService.CheckIfServiceOwner("JASONJASON", "/gingmygoo"));
+            var sms = new ServiceManagementService(new ApiGatewayContext());
+            var teams = sms.GetTeamsUsername();
+
+            foreach(var t in teams)
+            {
+                Console.WriteLine(t);
+            }
 
         }
+
 
     }
 }
