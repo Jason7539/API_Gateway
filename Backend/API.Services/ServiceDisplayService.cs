@@ -29,9 +29,6 @@ namespace API.Services
                 return dao.GetAllData(teamName);
             else
                 return null;
-
         }
-
-
     }
 }
