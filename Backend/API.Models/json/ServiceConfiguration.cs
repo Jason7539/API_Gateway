@@ -14,8 +14,8 @@ namespace API.Models.json
         public class Configuration
         {
             public string Action { get; set; }
-            public string ParameterNames { get; set; }
-            public string ParameterDataTypes { get; set; }
+            public List<string> ParameterNames { get; set; }
+            public List<string> ParameterDataTypes { get; set; }
             public string HttpMethod { get; set; }
             public bool Async { get; set; }
         }
