@@ -1,4 +1,5 @@
 ﻿using API.Services;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,12 +15,12 @@ namespace API.Managers
         public ILLRouter Router { get; set; }
         public RoutingManager() { }
 
-        public void RouteExecute()
+        public void RouteExecute(AuthorizationHandlerContext authContext, string serviceConfigID, string callbackUrl)
         {
 
             ///TODO: pull from the service configuration
             ILLBuilder routeBuilder = new LLFireForgetBuilder();
-            //ILLRouter route = routeBuilder.Build(/*string needed */);
+            ILLRouter route = routeBuilder.Build(authContext, serviceConfigID);
 
         }
 

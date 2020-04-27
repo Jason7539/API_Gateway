@@ -1,39 +1,29 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace API.Services
 {
-    public class LLFireForgetRouterAsync
+    public class LLFireForgetRouterAsync:ILLRouter
     {
-        public RouterContext Context { get; set; }
         public IStep [] Steps { get; set; }
-        public IStep Head
-        {
-            get
-            {
-                return Head;
-            }
-            private set
-            {
-                if(Head == null)
-                {
-                    Head = value;
-                }
-                else
-                {
-                    Head.SetNext(value);
-                }
-            }
-        }
+        public int ReturnStep { get; set; }
+        public string CallbackUrl { get; set; }
 
-        public LLFireForgetRouterAsync(int stepCount) 
+        public LLFireForgetRouterAsync(int stepCount)
         {
             Steps = new IStep[stepCount];
         }
+        public LLFireForgetRouterAsync(int stepCount, int returnStep) 
+        {
+            Steps = new IStep[stepCount];
+            ReturnStep = returnStep;
+        }
 
-
-
-
+        public void Execute()
+        {
+            
+        }
     }
 }

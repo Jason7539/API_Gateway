@@ -9,6 +9,9 @@ namespace API.Services
     /// </summary>
     public interface ILLRouter
     {
+        IStep[] Steps { get; set; }
+        int ReturnStep { get; set; }
+        string CallbackUrl { get; set; }
         void Execute();
     }
 }
