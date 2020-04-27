@@ -258,31 +258,31 @@ export default {
                 Configurations: [
                   {
                     Action: this.RouteOne, 
-                    ParameterNames: this.ParameterNameOne,
-                    ParameterDataTypes: this.ParameterTypeOne,
+                    ParameterNames: this.ParameterNameOne.split(","),
+                    ParameterDataTypes: this.ParameterTypeOne.split(","),
                     HttpMethod: this.HttpMethodOne,
                     Async: this.AsyncOne
                   },
                   {
                     Action: this.RouteTwo, 
-                    ParameterNames: this.ParameterNameTwo,
-                    ParameterDataTypes: this.ParameterTypeTwo,
+                    ParameterNames: this.ParameterNameTwo.split(","),
+                    ParameterDataTypes: this.ParameterTypeTwo.split(","),
                     HttpMethod: this.HttpMethodTwo,
                     Async: this.AsyncTwo
                   },
                   {
                     Action: this.RouteThree, 
-                    ParameterNames: this.ParameterNameThree,
-                    ParameterDataTypes: this.ParameterTypeThree,
+                    ParameterNames: this.ParameterNameThree.split(","),
+                    ParameterDataTypes: this.ParameterTypeThree.split(","),
                     HttpMethod: this.HttpMethodThree,
                     Async: this.AsyncThree
                   },
                   {
-                    Action: this.RouteThree, 
-                    ParameterNames: this.ParameterNameThree,
-                    ParameterDataTypes: this.ParameterTypeThree,
-                    HttpMethod: this.HttpMethodThree,
-                    Async: this.AsyncThree
+                    Action: this.RouteFour, 
+                    ParameterNames: this.ParameterNameFour.split(","),
+                    ParameterDataTypes: this.ParameterTypeFour.split(","),
+                    HttpMethod: this.HttpMethodFour,
+                    Async: this.AsyncFour
                   }
                 ]
               }),
