@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace API.Services
     /// </summary>
     public interface ILLBuilder
     {
-        ILLRouter Build(string serviceConfigData);
+        ILLRouter Build(AuthorizationHandlerContext authContext, string serviceConfigData);
 
     }
 }

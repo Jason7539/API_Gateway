@@ -11,7 +11,12 @@ namespace API.Services
     public interface IStep
     {
         IStep Next{get;set;}
-        void SetNext(IStep step);
+        bool Async { get; set; }
+        string Action { get; set; }
+        bool OutputRequired { get; set; }
+        string HttpMethod { get; set; }
+        string[] ArrayParameterTypes { get; set; }
+        string[] ArrayParameterNames { get; set; }
         void Execute();
         
     }

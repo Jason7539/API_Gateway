@@ -12,21 +12,11 @@ namespace API.Services
         public bool OutputRequired { get; set; }
         public string[] ArrayParameterTypes { get; set; }
         public string[] ArrayParameterNames { get; set; }
+        public string HttpMethod { get; set; }
 
 
         public Step()
         { }
-        public void SetNext(IStep next)
-        {
-            if (Next == null)
-            {
-                Next = next;
-            }
-            else
-            {
-                Next.SetNext(next);
-            }
-        }
 
         public void Execute()
         {
