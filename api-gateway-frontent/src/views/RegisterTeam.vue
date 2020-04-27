@@ -9,18 +9,18 @@
         required
       ></v-text-field>
       <v-text-field
+        @keyup="Validate"
         type="password"
         v-model="Password"
         label="Password"
         :rules="PasswordRules"
-        required
       ></v-text-field>
       <v-text-field
+        @keyup="Validate"
         type="password"
         v-model="RepeatPassword"
         label="Repeat Password"
         :rules="RepeatPasswordRules"
-        required
       ></v-text-field>
       <v-text-field
         v-model="WebsiteUrl"
@@ -37,6 +37,14 @@
     </v-form>
 
     <v-btn class="button" @click="Submit">Submit</v-btn>
+    <div v-if="Loading" class="text-center">
+      <v-progress-circular
+        :size="100"
+        color="primary"
+        indeterminate
+      ></v-progress-circular>
+    </div>
+
     <!-- Dialog to display the status of the form submission -->
     <v-dialog v-model="dialog" max-width="800" :persistent="true">
       <v-card>
@@ -65,13 +73,13 @@ export default {
     GetPassword() {
       return this.Password;
     },
-    GetRepeatedPassword()
-    {
+    GetRepeatedPassword() {
       return this.RepeatPassword;
-    }
+    },
   },
   data() {
     return {
+      Loading: false,
       Username: "",
       Password: "",
       RepeatPassword: "",
@@ -86,18 +94,21 @@ export default {
         (v) => !!v || "Username is required",
         (v) =>
           v.length >= 4 || "Username must be greater or equal to 4 characters",
-          (v) => v.length < 200 || "Username must be less than 200 characters"
+        (v) => v.length < 200 || "Username must be less than 200 characters",
       ],
       PasswordRules: [
+        () =>
+          this.GetPassword === this.RepeatPassword ||
+          "Passwords1 are not equal",
         (v) => !!v || "Password is required",
         (v) => v.length >= 12 || "Password must be greater or equal to 12",
-        (v) => v ===this.GetPassword || "Passwords are not equal",
         (v) => v.length < 2000 || "Password  must be less than 2000",
       ],
       RepeatPasswordRules: [
+        () =>
+          this.GetPassword === this.RepeatPassword || "Passwords are not equal",
         (v) => !!v || "Password is required",
         (v) => v.length >= 12 || "Password must be greater or equal to 12",
-        (v) => v === this.GetRepeatedPassword || "Passwords are not equal",
         (v) => v.length < 2000 || "Password  must be less than 2000",
       ],
       WebsiteUrlRules: [(v) => !!v || "Website url is required"],
@@ -105,7 +116,13 @@ export default {
     };
   },
   methods: {
+    Validate() {
+      this.$refs.form.validate();
+    },
     Submit() {
+      // Display loading button.
+      this.Loading = true;
+
       // Test if the form is valid.
       let formValid = this.$refs.form.validate();
 
@@ -129,13 +146,23 @@ export default {
           }),
         })
           .then((response) => {
+            // Remove loading.
+            this.Loading = false;
+
             // Throw exception if status code is above 400.
-            if(!response.ok)
-            {
+            // If unauthorized log them out.
+            if (response.status === 401) {
+              this.$store.dispatch("ResetState");
+              this.$router.replace("/login").catch(err => err);
+            }
+            
+            // Throw exception if status code is above 401.
+            if (response > 401) {
               throw Error("response error");
             }
             // Process response as json.
-            return response.json()})
+            return response.json();
+          })
           .then((data) => {
             // If we get a successful response back.
             if (data.teamCreate === true) {
@@ -149,7 +176,7 @@ export default {
                 "clientSecret: " +
                 data.clientSecret;
 
-              // Display dialog. 
+              // Display dialog.
               this.dialog = true;
               this.FormStatus = true;
             } else {
@@ -198,6 +225,8 @@ export default {
             }
           })
           .catch((error) => {
+            // Remove loading.
+            this.Loading = false;
             // If we get an error for fetch. Open dialog to contact system admin.
             console.log(error);
             this.dialog = true;
@@ -213,7 +242,7 @@ export default {
       this.dialog = false;
       // if formstatus true take to login page.
       if (this.FormStatus === true) {
-        this.$router.push("Login");
+        this.$router.push("Login").catch(err => err);
       }
     },
   },
