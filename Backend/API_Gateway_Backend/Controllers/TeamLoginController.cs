@@ -32,7 +32,7 @@ namespace API_Gateway_Controllers.Controllers
             {
             return NotFound();
             }
-}
+        }
 
         [Authorize(Policy = "IsOwner")]
         [HttpGet("secure/{username}")]

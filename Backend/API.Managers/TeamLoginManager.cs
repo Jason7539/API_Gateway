@@ -42,6 +42,7 @@ namespace API.Managers
                     Status = true,
                     AccessToken = _JWTService.GenerateHmacSignedJWTToken(postInfo.Username, postInfo.Username, Constants.Issuer, DateTime.Now.ToUniversalTime(),
                                 DateTime.Now.AddMinutes(Constants.AuthenticationValidMinutes).ToUniversalTime(), Constants.SigningKey),
+
                     Username = postInfo.Username,
                     ClientId = clientId
                 };

@@ -69,5 +69,30 @@ namespace API.Managers
         }
 
 
+        public int GetOwnedServicePagination(string clientId)
+        {
+            return _serviceManagementService.GetOwnedServicePagination(clientId);
+        }
+
+        public List<ManageServiceResp> GetOwnedServices(string clientId, int pagination)
+        {
+            return _serviceManagementService.GetOwnedService(clientId, pagination);
+        }
+
+        public bool DeleteService(string endpoint)
+        {
+            return _serviceManagementService.DeleteService(endpoint);
+        }
+
+        public bool UpdateServicePrivacy(UpdateServicePatch updateServicePatch)
+        {
+            return _serviceManagementService.UpdateServicePrivacy(updateServicePatch);
+        }
+
+        public List<string> GetAllowedConfigurationUsers(string endpoint)
+        {
+            return _serviceManagementService.GetAllowedConfigurationUsers(endpoint);
+        }
+
     }
 }

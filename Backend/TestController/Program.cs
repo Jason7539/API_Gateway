@@ -16,6 +16,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 using Newtonsoft.Json;
+using System.Collections.Generic;
+
 namespace TestController
 {
     class Program
@@ -78,7 +80,8 @@ namespace TestController
 
             var sms = new ServiceManagementService(new ApiGatewayContext());
 
-            Console.WriteLine(sms.IsServiceEndpointUnique("moogles"));
+            var usernames = sms.GetAllowedConfigurationUser("panic");
+
             //var teams = sms.GetTeamsUsername();
 
             //foreach(var t in teams)
@@ -86,16 +89,14 @@ namespace TestController
             //    Console.WriteLine(t);
             //}
 
-            string config = "{\"Steps\":1,\"ReturnStep\":1,\"Configurations\":[{\"Action\":\"asdasd\",\"ParameterNames\":\"asdf,asdf\",\"ParameterDataTypes\":\"string, int\",\"HttpMethod\":\"GET\",\"Async\":false},{\"Action\":\"\",\"ParameterNames\":\"\",\"ParameterDataTypes\":\"\",\"HttpMethod\":\"GET\",\"Async\":false},{\"Action\":\"\",\"ParameterNames\":\"\",\"ParameterDataTypes\":\"\",\"HttpMethod\":\"GET\",\"Async\":false},{\"Action\":\"\",\"ParameterNames\":\"\",\"ParameterDataTypes\":\"\",\"HttpMethod\":\"GET\",\"Async\":false}]}";
 
             //var configjson = JsonSerializer.Deserialize<ServiceConfiguration>(config);  // system.text
 
-            var configjson = JsonConvert.DeserializeObject<ServiceConfiguration>(config);
 
 
 
             var balh = "asdasd";
-            Console.WriteLine("gingoo");
+
         }
 
 

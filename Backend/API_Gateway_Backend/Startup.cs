@@ -64,8 +64,18 @@ namespace API_Gateway_Controllers
                     ValidateIssuer = true,                  // Test that the issuer matches the server.
                     ValidateLifetime = true,                // Test that the expiration time has not passed.
                     ValidateAudience = false,               // HACK: Temporary making audience not checked
-                    
 
+                    LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
+                    {
+                        if(expires == null)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return expires > DateTime.Now.ToUniversalTime();
+                        }
+                    },
                     ValidIssuer = Constants.Issuer          // Issuer to compare token against.
                     
                 };
