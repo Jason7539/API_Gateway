@@ -3,12 +3,14 @@
     <h1>Team Registration</h1>
     <v-form ref="form" :lazy-validation="false">
       <v-text-field
+        id="Username"
         v-model="Username"
         label="Username"
         :rules="UsernameRules"
         required
       ></v-text-field>
       <v-text-field
+        id="Password"
         @keyup="Validate"
         type="password"
         v-model="Password"
@@ -16,6 +18,7 @@
         :rules="PasswordRules"
       ></v-text-field>
       <v-text-field
+        id="RepeatPassword"
         @keyup="Validate"
         type="password"
         v-model="RepeatPassword"
@@ -23,12 +26,14 @@
         :rules="RepeatPasswordRules"
       ></v-text-field>
       <v-text-field
+        id="WebsiteUrl"
         v-model="WebsiteUrl"
         label="Website URL"
         :rules="WebsiteUrlRules"
         required
       ></v-text-field>
       <v-text-field
+        id="CallbackUrl"
         v-model="CallbackUrl"
         label="Callback URL"
         :rules="CallbackUrlRules"
@@ -36,7 +41,7 @@
       ></v-text-field>
     </v-form>
 
-    <v-btn class="button" @click="Submit">Submit</v-btn>
+    <v-btn id="Submit" class="button" @click="Submit">Submit</v-btn>
     <div v-if="Loading" class="text-center">
       <v-progress-circular
         :size="100"
@@ -99,7 +104,7 @@ export default {
       PasswordRules: [
         () =>
           this.GetPassword === this.RepeatPassword ||
-          "Passwords1 are not equal",
+          "Passwords are not equal",
         (v) => !!v || "Password is required",
         (v) => v.length >= 12 || "Password must be greater or equal to 12",
         (v) => v.length < 2000 || "Password  must be less than 2000",
@@ -153,9 +158,9 @@ export default {
             // If unauthorized log them out.
             if (response.status === 401) {
               this.$store.dispatch("ResetState");
-              this.$router.replace("/login").catch(err => err);
+              this.$router.replace("/login").catch((err) => err);
             }
-            
+
             // Throw exception if status code is above 401.
             if (response > 401) {
               throw Error("response error");
@@ -242,7 +247,7 @@ export default {
       this.dialog = false;
       // if formstatus true take to login page.
       if (this.FormStatus === true) {
-        this.$router.push("Login").catch(err => err);
+        this.$router.push("Login").catch((err) => err);
       }
     },
   },

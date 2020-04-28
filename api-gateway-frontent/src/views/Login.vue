@@ -2,6 +2,7 @@
   <div>
     <v-form ref="form" :lazy-validation="false">
       <v-text-field
+        id="Username"
         v-model="Username"
         label="Username"
         :rules="UsernameRules"
@@ -10,6 +11,7 @@
       ></v-text-field>
 
       <v-text-field
+        id="Password"
         type="password"
         v-model="Password"
         label="Password"
@@ -25,7 +27,7 @@
         @CloseDialog="dialog = false"
       ></ErrorStatus>
 
-      <v-btn class="button" @click="Login">Login</v-btn>
+      <v-btn id="Login" class="button" @click="Login">Login</v-btn>
       <div v-if="Loading" class="text-center">
         <v-progress-circular
           :size="100"
@@ -98,9 +100,9 @@ export default {
             // If unauthorized log them out.
             if (response.status === 401) {
               this.$store.dispatch("ResetState");
-              this.$router.replace("/login").catch(err => err);
+              this.$router.replace("/login").catch((err) => err);
             }
-            
+
             // Throw exception if status code is above 401.
             if (response > 401) {
               throw Error("response error");
@@ -118,7 +120,7 @@ export default {
               this.$store.dispatch("UpdateLoggedIn", true);
 
               // Take User to login page when they successful log in.
-              this.$router.replace("/").catch(err => err);
+              this.$router.replace("/").catch((err) => err);
             } else {
               // Login failed: Display error message.
               this.DialogHeadline = "Login Failed";

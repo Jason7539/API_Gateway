@@ -6,6 +6,7 @@
 
     <v-form ref="form" :lazy-validation="false">
       <v-text-field
+        id="RouteToAccess"
         v-model="RouteToAccess"
         label="Route To Access"
         :rules="RouteToAccessRules"
@@ -17,6 +18,7 @@
       <v-row>
         <v-col cols="8" sm="4">
           <v-text-field
+           id="Input"
             v-model="Input"
             label="Input"
             filled
@@ -27,6 +29,7 @@
 
         <v-col cols="8" sm="4">
           <v-text-field
+            id="Output"
             v-model="Output"
             label="Output"
             filled
@@ -36,6 +39,7 @@
         </v-col>
         <v-col cols="8" sm="4">
           <v-text-field
+           id="DataFormat"
             v-model="DataFormat"
             label="Data Format"
             filled
@@ -46,6 +50,7 @@
       </v-row>
 
       <v-textarea
+      id="Description"
         v-model="Description"
         label="Service Description"
         hint="Must Be less than 200 characters"
@@ -57,11 +62,12 @@
 
       <v-row>
         <v-col>
-          <v-select label="Steps" v-model="StepsDefault" :items="StepsList">
+          <v-select id="Steps" label="Steps" v-model="StepsDefault" :items="StepsList">
           </v-select>
         </v-col>
         <v-col>
           <v-select
+           id="OpenTo"
             multiple
             label="Open To"
             v-model="OpentToDefault"
@@ -76,6 +82,7 @@
         <v-row>
           <v-col>
             <v-text-field
+              id="RouteOne"
               v-model="RouteOne"
               label="Https url For 1st action"
             ></v-text-field>
@@ -234,7 +241,7 @@
         :items="StepsList.slice(0, StepsDefault)"
       ></v-select>
     </v-form>
-    <v-btn @click="CreateService">Create</v-btn>
+    <v-btn id="Create" @click="CreateService">Create</v-btn>
 
       <div v-if="Loading" class="text-center">
         <v-progress-circular

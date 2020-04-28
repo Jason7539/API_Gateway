@@ -27,13 +27,13 @@
       <v-col
         ><v-btn @click="Delete">
           <v-icon>mdi-delete</v-icon>
-        </v-btn></v-col
+        </v-btn>Del</v-col
       >
 
       <v-col
         ><v-btn @click="Save">
           <v-icon>mdi-content-save</v-icon>
-        </v-btn></v-col
+        </v-btn>Save</v-col
       >
     </v-row>
       <div v-if="Loading" class="text-center">
