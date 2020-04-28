@@ -80,7 +80,7 @@ namespace TestController
 
             var sms = new ServiceManagementService(new ApiGatewayContext());
 
-            var usernames = sms.GetAllowedConfigurationUser("panic");
+            var usernames = sms.GetAllowedConfigurationUsers("panic");
 
             //var teams = sms.GetTeamsUsername();
 
@@ -92,8 +92,14 @@ namespace TestController
 
             //var configjson = JsonSerializer.Deserialize<ServiceConfiguration>(config);  // system.text
 
+            using var _apiGatewayContext = new ApiGatewayContext();
+            var resource = "asdasda";
+            var scopeclaim = "jasonjason";
 
-
+            var owner = from team in _apiGatewayContext.Team
+                        join service in _apiGatewayContext.Service on team.ClientId equals service.Owner
+                        where resource == service.Endpoint && scopeclaim == team.Username
+                        select team.Username;
 
             var balh = "asdasd";
 

@@ -136,7 +136,7 @@ export default {
           // Display loading.
           this.Loading = true;
             fetch(
-        `${global.ApiDomainName}/api/ServiceManagement/UpdateServicePrivacy`,
+        `${global.ApiDomainName}/api/ServiceManagement/UpdateServicePrivacy/${this.Service.endpoint}`,
         {
           method: "PATCH",
           mode: "cors",

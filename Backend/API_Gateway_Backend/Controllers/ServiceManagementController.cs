@@ -44,7 +44,7 @@ namespace API_Gateway_Controllers.Controllers
         {
             return Ok(_serviceManagementManager.GetOwnedServicePagination(clientId));
         }
-        
+
         // Get owned services
         // Check that they are authorized to do this.
         [HttpGet("GetOwnedServices/{clientId}/{pagination}")]
@@ -55,6 +55,7 @@ namespace API_Gateway_Controllers.Controllers
         }
 
         // Delete Services and configurations 
+        [Authorize(Policy = "IsOwner")]
         [HttpDelete("DeleteService/{endpoint}")]
         [Produces("application/json")]
         public IActionResult DeleteService(string endpoint)
@@ -63,7 +64,8 @@ namespace API_Gateway_Controllers.Controllers
         }
 
         // Change Service Privacy.
-        [HttpPatch("UpdateServicePrivacy")]
+        [Authorize(Policy = "IsOwner")]
+        [HttpPatch("UpdateServicePrivacy/{endpoint}")]
         [Produces("application/json")]
         public IActionResult UpdateServicePrivacy(UpdateServicePatch updateServicePatch)
         {
@@ -71,6 +73,7 @@ namespace API_Gateway_Controllers.Controllers
         }
 
         // Get Who a service is open to 
+        [Authorize(Policy = "IsOwner")]
         [HttpGet("GetAllowedUsers/{endpoint}")]
         [Produces("application/json")]
         public IActionResult GetAllowedConfigurationUsers(string endpoint)

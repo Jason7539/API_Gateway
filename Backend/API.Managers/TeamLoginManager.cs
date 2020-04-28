@@ -40,7 +40,9 @@ namespace API.Managers
                 return new TeamLoginResp()
                 {
                     Status = true,
-                    AccessToken = _JWTService.GenerateHmacSignedJWTToken(postInfo.Username, postInfo.Username, Constants.Issuer, DateTime.Now.ToUniversalTime(),
+
+                    // TODO: updated audience
+                    AccessToken = _JWTService.GenerateHmacSignedJWTToken(postInfo.Username, clientId, Constants.Issuer, DateTime.Now.ToUniversalTime(),
                                 DateTime.Now.AddMinutes(Constants.AuthenticationValidMinutes).ToUniversalTime(), Constants.SigningKey),
 
                     Username = postInfo.Username,
