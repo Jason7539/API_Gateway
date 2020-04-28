@@ -36,48 +36,47 @@ export default {
   watch: {
     // Update pagination based on model.
     CurrentPage(newValue) {
-      // Reset the list of services when pagination changes 
-       fetch(
-      `${global.ApiDomainName}/api/ServiceManagement/GetOwnedServices/${this.$store.state.ClientId}/${newValue}`,
-      {
-        method: "GET",
-        mode: "cors",
-        headers: {
-          Authorization: "Bearer " + this.$store.state.AccessToken,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => {
-        // Display error message if response isn't valid.
-            // If unauthorized log them out.
-            if (response.status === 401) {
-              this.$store.dispatch("ResetState");
-              this.$router.replace("/login").catch(err => err);
-            }
-            
-            // Throw exception if status code is above 401.
-            if (response > 401) {
-              throw Error("response error");
-            }
+      // Reset the list of services when pagination changes
+      fetch(
+        `${global.ApiDomainName}/api/ServiceManagement/GetOwnedServices/${this.$store.state.ClientId}/${newValue}`,
+        {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            Authorization: "Bearer " + this.$store.state.AccessToken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((response) => {
+          // Display error message if response isn't valid.
+          // If unauthorized log them out.
+          if (response.status === 401) {
+            this.$store.dispatch("ResetState");
+            this.$router.replace("/login").catch((err) => err);
+          }
 
-        return response.json();
-      })
-      .then((data) => {
-        this.Services = [];
-        data.forEach((element) => {
-          this.Services.push(element);
+          // Throw exception if status code is above 401.
+          if (response > 401) {
+            throw Error("response error");
+          }
+
+          return response.json();
+        })
+        .then((data) => {
+          this.Services = [];
+          data.forEach((element) => {
+            this.Services.push(element);
+          });
+        })
+        .catch(() => {
+          // Display error dialog if there is a problem with fetch.
+          this.DialogHeadline = global.ErrorMessage;
+          this.DialogMessage = "";
+          this.dialog = true;
         });
-      })
-      .catch(() => {
-        this.DialogHeadline = global.ErrorMessage;
-        this.DialogMessage = "";
-        this.dialog = true;
-      });
-
-      
-    }
+    },
   },
   data() {
     return {
@@ -96,7 +95,9 @@ export default {
   },
   methods: {
     RemoveService(service) {
-      this.Services = this.Services.filter(s => s.endpoint !== service.endpoint)
+      this.Services = this.Services.filter(
+        (s) => s.endpoint !== service.endpoint
+      );
     },
   },
   created() {
@@ -115,16 +116,16 @@ export default {
     )
       .then((response) => {
         // Display error message if response isn't valid.
-            // If unauthorized log them out.
-            if (response.status === 401) {
-              this.$store.dispatch("ResetState");
-              this.$router.replace("/login").catch(() => {});
-            }
-            
-            // Throw exception if status code is above 401.
-            if (response > 401) {
-              throw Error("response error");
-            }
+        // If unauthorized log them out.
+        if (response.status === 401) {
+          this.$store.dispatch("ResetState");
+          this.$router.replace("/login").catch(() => {});
+        }
+
+        // Throw exception if status code is above 401.
+        if (response > 401) {
+          throw Error("response error");
+        }
 
         return response.json();
       })
@@ -152,25 +153,28 @@ export default {
     )
       .then((response) => {
         // Display error message if response isn't valid.
-            // If unauthorized log them out.
-            if (response.status === 401) {
-              this.$store.dispatch("ResetState");
-              this.$router.replace("/login").catch(err => err);
-            }
-            
-            // Throw exception if status code is above 401.
-            if (response > 401) {
-              throw Error("response error");
-            }
+        // If unauthorized log them out.
+        if (response.status === 401) {
+          this.$store.dispatch("ResetState");
+          this.$router.replace("/login").catch((err) => err);
+        }
 
+        // Throw exception if status code is above 401.
+        if (response > 401) {
+          throw Error("response error");
+        }
+
+        // Process response as json.
         return response.json();
       })
       .then((data) => {
+        // Added list of services from response.
         data.forEach((element) => {
           this.Services.push(element);
         });
       })
       .catch(() => {
+        // Display error dialog if problem occurs during fetch.
         this.DialogHeadline = global.ErrorMessage;
         this.DialogMessage = "";
         this.dialog = true;

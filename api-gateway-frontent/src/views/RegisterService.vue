@@ -442,6 +442,7 @@ export default {
             // Remove loading icon.
             this.Loading = false;
 
+            // Display error dialog if problem occurs during fetch.
             this.DialogHeadline = global.ErrorMessage;
             this.dialog = true;
             this.DialogMessage = "";
@@ -486,6 +487,7 @@ export default {
         this.TeamList = data.teams;
       })
       .catch(() => {
+        // Display error dialog if problem occurs in fetch
         this.DialogHeadline = global.ErrorMessage;
         this.DialogMessage = "";
         this.dialog = true;

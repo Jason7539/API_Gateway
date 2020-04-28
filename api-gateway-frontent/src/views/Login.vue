@@ -55,6 +55,7 @@ export default {
       dialog: false,
       DialogHeadline: "",
 
+      // Input form validation rules
       UsernameRules: [
         (v) => !!v || "Username is required",
         (v) =>
