@@ -30,17 +30,8 @@ namespace API_Gateway_Controllers.Controllers
             }
             catch
             {
-            return NotFound();
+                return NotFound();
             }
         }
-
-        [Authorize(Policy = "IsOwner")]
-        [HttpGet("secure/{username}")]
-        public IActionResult Protected(string username)
-        {
-            return Ok("hello honey");
-        }
-
-
     }
 }

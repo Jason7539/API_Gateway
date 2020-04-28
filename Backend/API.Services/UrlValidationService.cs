@@ -10,34 +10,52 @@ namespace API.Services
 {
     public class UrlValidationService
     {
+        private readonly ApiGatewayContext _context;
+
+        public UrlValidationService(ApiGatewayContext apiGatewayContext)
+        {
+            _context = apiGatewayContext;
+        }
+
+        /// <summary>
+        /// Check if a team's callback url is unique
+        /// </summary>
+        /// <param name="url">Url to check</param>
+        /// <returns>Bool representing whether a url is unique</returns>
         public bool IsCallBackURLUnique(string url)
         {
-            using (var context = new ApiGatewayContext())
-            {
-                // Attempt to find a team call back url with inputted url.
-                var callBackUrls = context.Team
-                                        .Where(s => s.CallbackUrl == url)
-                                        .ToList();
 
-                // Return true if url is unique.
-                return callBackUrls.Count == 0;
-            }
-        }
-
-        public bool IsWebsiteURLUnique(string url)
-        {
-            using (var context = new ApiGatewayContext())
-            {
-                // Attempt to find a team website url with inputted url.
-                var websiteUrls = context.Team
-                                    .Where(s => s.WebsiteUrl == url)
+            // Attempt to find a team call back url with inputted url.
+            var callBackUrls = _context.Team
+                                    .Where(s => s.CallbackUrl == url)
                                     .ToList();
 
-                // Return true if url is unique.
-                return websiteUrls.Count == 0;
-            }
+            // Return true if url is unique.
+            return callBackUrls.Count == 0;
+
         }
 
+        /// <summary>
+        /// Check if a team's website url is unique
+        /// </summary>
+        /// <param name="url">Url to check</param>
+        /// <returns>Bool representing whether the url is unique</returns>
+        public bool IsWebsiteURLUnique(string url)
+        {
+            // Attempt to find a team website url with inputted url.
+            var websiteUrls = _context.Team
+                                .Where(s => s.WebsiteUrl == url)
+                                .ToList();
+
+            // Return true if url is unique.
+            return websiteUrls.Count == 0;
+        }
+
+        /// <summary>
+        /// Check if a url is https
+        /// </summary>
+        /// <param name="url">Url to test</param>
+        /// <returns>Bool representing whether the url is https</returns>
         public bool IsUrlHttps(string url)
         {
             try
@@ -52,6 +70,11 @@ namespace API.Services
             }
         }
 
+        /// <summary>
+        /// Test if a url is valid
+        /// </summary>
+        /// <param name="url">Url to test</param>
+        /// <returns>Bool representing whether the url is valid</returns>
         public bool IsUrlValid(string url)
         {
             try
@@ -65,6 +88,11 @@ namespace API.Services
             }
         }
 
+        /// <summary>
+        /// Test whether a url is alive using a HEAD request
+        /// </summary>
+        /// <param name="url">Url to test</param>
+        /// <returns>Bool representing whether the url is alive</returns>
         public bool IsUrlAlive(string url)
         {
     
@@ -81,7 +109,6 @@ namespace API.Services
                     // Return true if we get an 200 status code.
                     return response.StatusCode == HttpStatusCode.OK;
                 }
-
             }
             // Return false if the webrequest doesn't accept HEAD request.
             catch(System.Net.WebException)

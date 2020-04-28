@@ -1,18 +1,6 @@
 <template>
     <div>
         manage team
-
-        <v-pagination
-        v-model="current"
-        :length="length"
-        ></v-pagination>
-    <div v-if="Loading" class="text-center">
-      <v-progress-circular
-        :size="100"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
-    </div>
     </div>
 </template>
 

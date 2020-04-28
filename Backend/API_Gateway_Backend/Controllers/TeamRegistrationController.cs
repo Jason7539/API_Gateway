@@ -30,7 +30,6 @@ namespace API_Gateway_Controllers.Controllers
             try
             {
                 return Ok(_teamRegistrationManager.CreateTeamAccount(postInfo));
-
             }
             catch
             {

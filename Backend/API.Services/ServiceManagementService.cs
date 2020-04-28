@@ -18,6 +18,11 @@ namespace API.Services
             _context = apiGatewayContext;
         }
 
+        /// <summary>
+        /// Create a service for a team
+        /// </summary>
+        /// <param name="createServicePost">json request object containing information to create service</param>
+        /// <returns>Bool representing whether the operation passed</returns>
         public bool CreateService(CreateServicePost createServicePost)
         {
             try
@@ -45,6 +50,13 @@ namespace API.Services
 
         }
 
+        /// <summary>
+        /// Create configuration of a service for open teams
+        /// </summary>
+        /// <param name="opentTo">List of strings containing teams to create configurations for</param>
+        /// <param name="endPoint">End point for the configuration</param>
+        /// <param name="steps">Steps to perform for the configuration</param>
+        /// <returns>Bool representing whether the operation passed</returns>
         public bool CreateConfigurations(List<string> opentTo, string endPoint, string steps)
         {
             try
@@ -72,6 +84,10 @@ namespace API.Services
             }
         }
 
+        /// <summary>
+        /// Get all the registered teams
+        /// </summary>
+        /// <returns>List of strings containing team's username</returns>
         public List<string> GetTeamsUsername()
         {
             // Query to get all the team's username.
@@ -82,6 +98,11 @@ namespace API.Services
 
         }
 
+        /// <summary>
+        /// Test the uniqueness of a service's endpoint
+        /// </summary>
+        /// <param name="endpoint">Name of the endoint to test</param>
+        /// <returns></returns>
         public bool IsServiceEndpointUnique(string endpoint)
         {
             var service = _context.Service.
@@ -91,9 +112,14 @@ namespace API.Services
             return service.Count == 0;
         }
 
+        /// <summary>
+        /// Get the pagination length of services for a team
+        /// </summary>
+        /// <param name="clientId">Client id to get pagination length for</param>
+        /// <returns>Int containing length of service pagination</returns>
         public int GetOwnedServicePagination(string clientId)
         {
-            // Get pagination in multiples of 10.
+            // Get pagination in multiples of Constants.ServiceManagementPagination.
             var ownedServiceNum = _context.Service.Where(s => clientId == s.Owner).ToList().Count;
             var pages = ownedServiceNum / Constants.ServiceManagementPagination;
 
@@ -112,6 +138,12 @@ namespace API.Services
             }
         }
 
+        /// <summary>
+        /// Get the list of owned services for a team
+        /// </summary>
+        /// <param name="clientId">Client id to get owned services</param>
+        /// <param name="pagination">pagination to specify service. Starts at 1</param>
+        /// <returns>List of services for a team. Can be empty</returns>
         public List<ManageServiceResp> GetOwnedService(string clientId, int pagination)
         {
             return _context.Service.
@@ -123,24 +155,37 @@ namespace API.Services
 
         }
 
+        /// <summary>
+        /// Delete a service and it's corresponding configuration
+        /// </summary>
+        /// <param name="endpoint">Service endpoint to delete</param>
+        /// <returns>Bool representing whether the operation passed</returns>
         public bool DeleteService(string endpoint)
         {
+            // Query the service
             var service = _context.Service.
                             Where(s => endpoint == s.Endpoint).
                             FirstOrDefault();
+
+            // If we couldn't find service return false.
             if(service == null)
             {
                 return false;
             }
             else
             {
+                // Else delete the service if we found it
                 _context.Service.Remove(service);
                 _context.SaveChanges();
                 return true;
             }
         }
 
-
+        /// <summary>
+        /// Update the configurations for a service. It does not delete the configurations for the owner.
+        /// </summary>
+        /// <param name="updateServicePatch">Json request object representing what to update</param>
+        /// <returns>Bool representing whether the operation passed</returns>
         public bool UpdateServicePrivacy(UpdateServicePatch updateServicePatch)
         {
             // Save the configuration to re add it later.
@@ -166,7 +211,7 @@ namespace API.Services
             // Loop through OpenTo and recreate config based on updated privacy rules.
             foreach(var team in updateServicePatch.OpenTo)
             {
-                // Grab the client id based on username 
+                // Grab the client id based on username.
                 var clientId = _context.Team.Where(t => team == t.Username).Select(t => t.ClientId).FirstOrDefault();
 
                 // If clientId is owner skip.
@@ -175,7 +220,7 @@ namespace API.Services
                     continue;
                 }
 
-                // Skip the creation if username is not found 
+                // Skip the creation if username is not found.
                 if(clientId == null)
                 {
                     continue;
@@ -187,15 +232,18 @@ namespace API.Services
                 }
             }
 
+            // Update the changes and return true.
             _context.SaveChanges();
             return true;
         }
 
-
+        /// <summary>
+        /// Get the teams that are allowed to use a service
+        /// </summary>
+        /// <param name="endpoint">Service endpoint to query</param>
+        /// <returns>List of strings containing the teams username</returns>
         public List<string> GetAllowedConfigurationUsers(string endpoint)
         {
-            // Get all team's username that can use the inputted endpoint.
-
             // First get the the clientId of users.
             var clientId = _context.Configuration.
                             AsNoTracking().
@@ -205,6 +253,7 @@ namespace API.Services
 
             var usernameList = new List<string>();
 
+            // Translate the client id to list of username.
             foreach(var id in clientId)
             {
                 var username = _context.Team.

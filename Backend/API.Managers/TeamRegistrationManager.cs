@@ -17,6 +17,11 @@ namespace API.Managers
             _urlValidationService = urlValidationService;
         }
 
+        /// <summary>
+        /// Create team accounts for the web api.
+        /// </summary>
+        /// <param name="postInfo">Json object to represent post request</param>
+        /// <returns>Json response object</returns>
         public TeamRegisterResp CreateTeamAccount(TeamRegisterPost postInfo)
         {
             // Check If Username is Taken.
@@ -26,7 +31,7 @@ namespace API.Managers
             var passwordResult = _teamRegistrationService.IsPasswordValid(postInfo.Password);
 
             // Check that passwords and repeat passwords are equal.
-            passwordResult = postInfo.Password == postInfo.RepeatPassword;
+            passwordResult &= postInfo.Password == postInfo.RepeatPassword;
 
             // Check If Website url is taken. Then Check if valid, if its alive and its https.
             var websiteUrl = _urlValidationService.IsWebsiteURLUnique(postInfo.WebsiteUrl);
