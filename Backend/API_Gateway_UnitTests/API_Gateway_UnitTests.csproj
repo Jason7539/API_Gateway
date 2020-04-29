@@ -15,8 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\API.Authorization\API.Authorization.csproj" />
+    <ProjectReference Include="..\API.Constants\API.Constants.csproj" />
     <ProjectReference Include="..\API.DAL\API.DAL.csproj" />
+    <ProjectReference Include="..\API.Managers\API.Managers.csproj" />
     <ProjectReference Include="..\API.Models\API.Models.csproj" />
+    <ProjectReference Include="..\API.Services\API.Services.csproj" />
   </ItemGroup>
 
 </Project>
