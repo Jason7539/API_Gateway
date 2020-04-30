@@ -35,6 +35,7 @@ namespace API_Gateway_Controllers.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
+
         }
     }
 }
