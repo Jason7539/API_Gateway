@@ -16,6 +16,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 using Newtonsoft.Json;
+using System.Collections.Generic;
+
 namespace TestController
 {
     class Program
@@ -78,7 +80,8 @@ namespace TestController
 
             var sms = new ServiceManagementService(new ApiGatewayContext());
 
-            Console.WriteLine(sms.IsServiceEndpointUnique("moogles"));
+            var usernames = sms.GetAllowedConfigurationUsers("panic");
+
             //var teams = sms.GetTeamsUsername();
 
             //foreach(var t in teams)
@@ -86,16 +89,20 @@ namespace TestController
             //    Console.WriteLine(t);
             //}
 
-            string config = "{\"Steps\":1,\"ReturnStep\":1,\"Configurations\":[{\"Action\":\"asdasd\",\"ParameterNames\":\"asdf,asdf\",\"ParameterDataTypes\":\"string, int\",\"HttpMethod\":\"GET\",\"Async\":false},{\"Action\":\"\",\"ParameterNames\":\"\",\"ParameterDataTypes\":\"\",\"HttpMethod\":\"GET\",\"Async\":false},{\"Action\":\"\",\"ParameterNames\":\"\",\"ParameterDataTypes\":\"\",\"HttpMethod\":\"GET\",\"Async\":false},{\"Action\":\"\",\"ParameterNames\":\"\",\"ParameterDataTypes\":\"\",\"HttpMethod\":\"GET\",\"Async\":false}]}";
 
             //var configjson = JsonSerializer.Deserialize<ServiceConfiguration>(config);  // system.text
 
-            var configjson = JsonConvert.DeserializeObject<ServiceConfiguration>(config);
+            using var _apiGatewayContext = new ApiGatewayContext();
+            var resource = "asdasda";
+            var scopeclaim = "jasonjason";
 
-
+            var owner = from team in _apiGatewayContext.Team
+                        join service in _apiGatewayContext.Service on team.ClientId equals service.Owner
+                        where resource == service.Endpoint && scopeclaim == team.Username
+                        select team.Username;
 
             var balh = "asdasd";
-            Console.WriteLine("gingoo");
+
         }
 
 

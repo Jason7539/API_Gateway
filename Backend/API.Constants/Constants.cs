@@ -25,9 +25,10 @@ namespace API.AppConstants
         public static readonly string Issuer = "Spring2020APIGateway";      // TODO: update to api domain.
         public static readonly string ClientId = "ClientId";
         public static readonly string Scope = "Scope";
-        public static readonly int AuthenticationValidMinutes = 60;
+        public static readonly int AuthenticationValidMinutes = 30;
 
-
+        // SERVICE MANAGEMENT
+        public static readonly int ServiceManagementPagination = 2;
 
     }
 }
