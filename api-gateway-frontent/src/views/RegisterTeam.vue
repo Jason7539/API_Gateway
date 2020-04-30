@@ -91,7 +91,7 @@ export default {
       PasswordRules: [
         (v) => !!v || "Password is required",
         (v) => v.length >= 12 || "Password must be greater or equal to 12",
-        (v) => v ===this.GetPassword || "Passwords are not equal",
+        (v) => v ==this.$data.RepeatPassword || "Passwords are not equal",
         (v) => v.length < 2000 || "Password  must be less than 2000",
       ],
       RepeatPasswordRules: [
