@@ -71,7 +71,7 @@ export default {
     },
     LogOut() {
       this.$store.dispatch("ResetState");
-      this.$router.replace("/login");
+      this.$router.replace("/login").catch(() => {});
     },
   },
 };

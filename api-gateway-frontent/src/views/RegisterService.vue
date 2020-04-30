@@ -6,6 +6,7 @@
 
     <v-form ref="form" :lazy-validation="false">
       <v-text-field
+        id="RouteToAccess"
         v-model="RouteToAccess"
         label="Route To Access"
         :rules="RouteToAccessRules"
@@ -17,6 +18,7 @@
       <v-row>
         <v-col cols="8" sm="4">
           <v-text-field
+           id="Input"
             v-model="Input"
             label="Input"
             filled
@@ -27,6 +29,7 @@
 
         <v-col cols="8" sm="4">
           <v-text-field
+            id="Output"
             v-model="Output"
             label="Output"
             filled
@@ -36,6 +39,7 @@
         </v-col>
         <v-col cols="8" sm="4">
           <v-text-field
+           id="DataFormat"
             v-model="DataFormat"
             label="Data Format"
             filled
@@ -46,6 +50,7 @@
       </v-row>
 
       <v-textarea
+      id="Description"
         v-model="Description"
         label="Service Description"
         hint="Must Be less than 200 characters"
@@ -57,11 +62,12 @@
 
       <v-row>
         <v-col>
-          <v-select label="Steps" v-model="StepsDefault" :items="StepsList">
+          <v-select id="Steps" label="Steps" v-model="StepsDefault" :items="StepsList">
           </v-select>
         </v-col>
         <v-col>
           <v-select
+           id="OpenTo"
             multiple
             label="Open To"
             v-model="OpentToDefault"
@@ -76,6 +82,7 @@
         <v-row>
           <v-col>
             <v-text-field
+              id="RouteOne"
               v-model="RouteOne"
               label="Https url For 1st action"
             ></v-text-field>
@@ -234,7 +241,16 @@
         :items="StepsList.slice(0, StepsDefault)"
       ></v-select>
     </v-form>
-    <v-btn @click="CreateService">Create</v-btn>
+    <v-btn id="Create" @click="CreateService">Create</v-btn>
+
+      <div v-if="Loading" class="text-center">
+        <v-progress-circular
+          :size="100"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+      </div>
+
 
     <ErrorStatus
       :HeadLine="DialogHeadline"
@@ -250,13 +266,14 @@ import * as global from "../globalExports.js";
 import ErrorStatus from "@/components/ErrorStatus.vue";
 export default {
   components: {
-    ErrorStatus
+    ErrorStatus,
   },
   data() {
     return {
+      Loading: false,
       DialogMessage: "",
       dialog: false,
-      DialogHeadline: "Error",
+      DialogHeadline: "",
 
       RouteToAccess: "",
       Input: "",
@@ -302,12 +319,12 @@ export default {
       Domain: global.ApiDomainName,
 
       // Rules for form inputs.
-      RouteToAccessRules: [v => !!v || "Route To Access is required"],
-      InputRules: [v => !!v || "Input is required"],
-      OutputRules: [v => !!v || "Output is required"],
-      DataFormatRules: [v => !!v || "DataFormat is required"],
-      DescriptionRules: [v => !!v || "Description is required"],
-      TeamListRules: [v => !!v || "Team selection needed"]
+      RouteToAccessRules: [(v) => !!v || "Route To Access is required"],
+      InputRules: [(v) => !!v || "Input is required"],
+      OutputRules: [(v) => !!v || "Output is required"],
+      DataFormatRules: [(v) => !!v || "DataFormat is required"],
+      DescriptionRules: [(v) => !!v || "Description is required"],
+      TeamListRules: [(v) => !!v || "Team selection needed"],
     };
   },
   methods: {
@@ -317,13 +334,16 @@ export default {
 
       // If form is valid sumbit post request.
       if (formValid) {
+        // Display loading icon.
+        this.Loading = true;
+
         fetch(`${global.ApiDomainName}/api/ServiceManagement/CreateService`, {
           method: "POST",
           mode: "cors",
           headers: {
             Authorization: "Bearer " + this.$store.state.AccessToken,
             Accept: "application/json",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
 
           body: JSON.stringify({
@@ -338,44 +358,47 @@ export default {
               Configurations: [
                 {
                   Action: this.RouteOne,
-                  ParameterNames: this.ParameterNameOne,
-                  ParameterDataTypes: this.ParameterTypeOne,
+                  ParameterNames: this.ParameterNameOne.split(","),
+                  ParameterDataTypes: this.ParameterTypeOne.split(","),
                   HttpMethod: this.HttpMethodOne,
-                  Async: this.AsyncOne
+                  Async: this.AsyncOne,
                 },
                 {
                   Action: this.RouteTwo,
-                  ParameterNames: this.ParameterNameTwo,
-                  ParameterDataTypes: this.ParameterTypeTwo,
+                  ParameterNames: this.ParameterNameTwo.split(","),
+                  ParameterDataTypes: this.ParameterTypeTwo.split(","),
                   HttpMethod: this.HttpMethodTwo,
-                  Async: this.AsyncTwo
+                  Async: this.AsyncTwo,
                 },
                 {
                   Action: this.RouteThree,
-                  ParameterNames: this.ParameterNameThree,
-                  ParameterDataTypes: this.ParameterTypeThree,
+                  ParameterNames: this.ParameterNameThree.split(","),
+                  ParameterDataTypes: this.ParameterTypeThree.split(","),
                   HttpMethod: this.HttpMethodThree,
-                  Async: this.AsyncThree
+                  Async: this.AsyncThree,
                 },
                 {
-                  Action: this.RouteThree,
-                  ParameterNames: this.ParameterNameThree,
-                  ParameterDataTypes: this.ParameterTypeThree,
-                  HttpMethod: this.HttpMethodThree,
-                  Async: this.AsyncThree
-                }
-              ]
+                  Action: this.RouteFour,
+                  ParameterNames: this.ParameterNameFour.split(","),
+                  ParameterDataTypes: this.ParameterTypeFour.split(","),
+                  HttpMethod: this.HttpMethodFour,
+                  Async: this.AsyncFour,
+                },
+              ],
             }),
             Input: this.Input,
             Output: this.Output,
-            DataFormat: this.DataFormat
-          })
+            DataFormat: this.DataFormat,
+          }),
         })
-          .then(response => {
+          .then((response) => {
+            // Remove loading icon.
+            this.Loading = false;
+
             // If unauthorized log them out.
             if (response.status === 401) {
               this.$store.dispatch("ResetState");
-              this.$router.replace("/login");
+              this.$router.replace("/login").catch(err => err);
             }
             // Throw exception if status code is above 401.
 
@@ -386,7 +409,7 @@ export default {
             // Process response as json.
             return response.json();
           })
-          .then(data => {
+          .then((data) => {
             console.log(data);
 
             // Display result dialog based on server response.
@@ -394,6 +417,8 @@ export default {
               this.DialogHeadline = "Service successfully created";
               this.DialogMessage = "";
               this.dialog = true;
+
+              // Reset form.
               this.$refs.form.reset();
             } else {
               // If service creation failed craft message about why.
@@ -414,7 +439,11 @@ export default {
             }
           })
           .catch(() => {
-            this.DialogHeadline = "Unexpected exception Please try again later";
+            // Remove loading icon.
+            this.Loading = false;
+
+            // Display error dialog if problem occurs during fetch.
+            this.DialogHeadline = global.ErrorMessage;
             this.dialog = true;
             this.DialogMessage = "";
           });
@@ -426,7 +455,7 @@ export default {
       }
 
       // Submit fetch request for
-    }
+    },
   },
   created() {
     // Fetch the all the teams username. Used to select who the service is open to.
@@ -436,14 +465,14 @@ export default {
       headers: {
         Authorization: "Bearer " + this.$store.state.AccessToken,
         Accept: "application/json",
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(response => {
+      .then((response) => {
         // If unauthorized log them out.
         if (response.status === 401) {
           this.$store.dispatch("ResetState");
-          this.$router.replace("/login");
+          this.$router.replace("/login").catch(err => err);
         }
 
         // Throw exception if status code is above 401.
@@ -453,16 +482,17 @@ export default {
 
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         // Process json response
         this.TeamList = data.teams;
       })
       .catch(() => {
-        this.DialogHeadline = "Unexpected exception Please try again later";
+        // Display error dialog if problem occurs in fetch
+        this.DialogHeadline = global.ErrorMessage;
         this.DialogMessage = "";
         this.dialog = true;
       });
-  }
+  },
 };
 </script>
 

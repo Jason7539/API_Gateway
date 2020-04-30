@@ -63,16 +63,28 @@ namespace API_Gateway_Controllers
                     RequireSignedTokens = true,             // Test that tokens are signed.
                     ValidateIssuer = true,                  // Test that the issuer matches the server.
                     ValidateLifetime = true,                // Test that the expiration time has not passed.
-                    ValidateAudience = false,               // HACK: Temporary making audience not checked
-                    
+                    ValidateAudience = true,                // Test that audience matches the server.
 
-                    ValidIssuer = Constants.Issuer          // Issuer to compare token against.
+                    LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
+                    {
+                        if(expires == null)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return expires > DateTime.Now.ToUniversalTime();
+                        }
+                    },
+                    ValidIssuer = Constants.Issuer,          // Issuer to compare token against.
+                    ValidAudience = Constants.Issuer         // Audience to compare token against.
                     
                 };
             });
 
             services.AddAuthorization(options =>
             {
+                // Authorization rule to test if team owns the service its trying to manipulate.
                 options.AddPolicy("IsOwner", policy => policy.Requirements.Add(new ManageServiceRequirement()));
             });
 

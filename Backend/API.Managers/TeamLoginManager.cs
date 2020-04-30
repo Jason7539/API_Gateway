@@ -20,19 +20,24 @@ namespace API.Managers
 
         }
 
-
+        /// <summary>
+        /// Check if an authentication request is valid
+        /// </summary>
+        /// <param name="postInfo">Json object representing client credentials</param>
+        /// <returns>Json response object</returns>
         public TeamLoginResp TeamLogin(TeamLoginPost postInfo)
         {
+            // Check if the username exists.
             var userNameExist = _teamLoginService.CheckUsernameExistence(postInfo.Username);
             var passwordValid = false;
             
-            // If the userNameExist then we grab the password
+            // If the userNameExist then we grab the password.
             if(userNameExist)
             {
                 passwordValid = _teamLoginService.ValidatePassword(postInfo.Username, postInfo.Password, Constants.HashIteration, KeyDerivationPrf.HMACSHA256);
             }
 
-
+            // If authentication passes return the corresponding json response.
             if (userNameExist && passwordValid)
             {
                 // Grab ClientId to return to frontend.
@@ -40,8 +45,11 @@ namespace API.Managers
                 return new TeamLoginResp()
                 {
                     Status = true,
-                    AccessToken = _JWTService.GenerateHmacSignedJWTToken(postInfo.Username, postInfo.Username, Constants.Issuer, DateTime.Now.ToUniversalTime(),
+
+                    // Access token to authorize protected resources.
+                    AccessToken = _JWTService.GenerateHmacSignedJWTToken(Constants.Issuer, clientId, Constants.Issuer, DateTime.Now.ToUniversalTime(),
                                 DateTime.Now.AddMinutes(Constants.AuthenticationValidMinutes).ToUniversalTime(), Constants.SigningKey),
+
                     Username = postInfo.Username,
                     ClientId = clientId
                 };
