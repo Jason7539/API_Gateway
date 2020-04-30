@@ -34,6 +34,7 @@ namespace API_Gateway_Controllers.Controllers
         [HttpGet("GetTeams")]
         [Produces("application/json")]
         public IActionResult GetTeams()
+
         {
             return Ok(_serviceManagementManager.GetTeamsUsername());
         }

@@ -2,17 +2,17 @@
   <div>
     <el-table
       :data="
-        registeredServices.filter(
+        availableServices.filter(
           data =>
             !search ||
-            data.team_name.toLowerCase().includes(search.toLowerCase()) ||
-            data.url.toLowerCase().includes(search.toLowerCase()) ||
-            data.input_type.toLowerCase().includes(search.toLowerCase()) ||
-            data.output_type.toLowerCase().includes(search.toLowerCase()) ||
-            data.data_format.toLowerCase().includes(search.toLowerCase())
+            data.username.toLowerCase().includes(search.toLowerCase()) ||
+            data.endPoint.toLowerCase().includes(search.toLowerCase()) ||
+            data.input.toLowerCase().includes(search.toLowerCase()) ||
+            data.output.toLowerCase().includes(search.toLowerCase()) ||
+            data.dataformat.toLowerCase().includes(search.toLowerCase())
         )
       "
-      :default-sort="{ prop: 'url', order: 'ascending' }"
+      :default-sort="{ prop: 'endPoint', order: 'ascending' }"
       style="width: 100% "
       stripe
     >
@@ -25,15 +25,15 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="url" label="URL" width="180" sortable>
+      <el-table-column prop="endPoint" label="EndPoint" width="180" sortable>
       </el-table-column>
-      <el-table-column prop="team_name" label="Team" width="180">
+      <el-table-column prop="username" label="Team" width="180">
       </el-table-column>
-      <el-table-column prop="input_type" label="Input Type" width="180">
+      <el-table-column prop="input" label="Input Type" width="180">
       </el-table-column>
-      <el-table-column prop="output_type" label="Output Type" width="180">
+      <el-table-column prop="output" label="Output Type" width="180">
       </el-table-column>
-      <el-table-column prop="data_format" label="Data Format" width="180">
+      <el-table-column prop="dataformat" label="Data Format" width="180">
       </el-table-column>
       <el-table-column align="right">
         <template slot="header" slot-scope="{}">
@@ -41,47 +41,75 @@
         </template>
       </el-table-column>
     </el-table>
+    <ErrorStatus
+      :HeadLine="DialogHeadline"
+      :Message="DialogMessage"
+      :dialog="dialog"
+      @CloseDialog="dialog = false"
+    ></ErrorStatus>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 import Element from "element-ui";
+import ErrorStatus from "@/components/ErrorStatus.vue";
 Vue.use(Element, { size: "small", zIndex: 3000 });
 export default {
   name: "ServiceDiscovery",
+  components: {
+    ErrorStatus
+  },
   data() {
     return {
-      registeredServices: [
-        {
-          url: "www.testurl1.com",
-          team_name: "TeamA",
-          input_type: "int",
-          output_type: "int",
-          data_format: "xml",
-          description: "Testing description for this service"
-        },
-        {
-          url: "www.testurl2.com",
-          team_name: "SixFold",
-          input_type: "string",
-          output_type: "string",
-          data_format: "json",
-          description: "Testing description for this service"
-        },
-        {
-          url: "www.testurl3.com",
-          team_name: "TheBoiz",
-          input_type: "string",
-          output_type: "string",
-          data_format: "xml",
-          description: "Testing description for this service"
-        }
-      ],
+      availableServices: [],
       search: ""
     };
   },
-  methods: {}
+  methods: {
+    DisplayService() {
+      // If the form is valid post to backend.
+      if (this.$data.accessToken != "") {
+        // Submit post request
+        fetch(`${global.ApiDomainName}/api/ServiceDiscovery/DisplayServices`, {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            ClientId: this.$data.ClientId,
+            Password: this.$data.Password
+          })
+        })
+          .then(response => {
+            // Proccess response status code
+            if (!response.ok) {
+              throw Error("response error");
+            }
+            // Process response as json
+            return response.json();
+          })
+          .then(data => {
+            data.forEach(i => {
+              this.availableServices.push(i);
+            });
+          })
+          .catch(error => {
+            // For unexpected errors display error page.
+            console.log(error);
+            this.DialogHeadline = "Unexpected error has occurred";
+            this.DialogMessage = "Please contact system admin";
+            this.dialog = true;
+          });
+      } else {
+        this.DialogMessage = "Please login first";
+        this.dialog = true;
+      }
+    }
+  }
 };
 </script>
 

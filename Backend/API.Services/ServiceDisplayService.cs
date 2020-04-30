@@ -2,33 +2,39 @@
 using System.Collections.Generic;
 using API.DAL;
 using API.Models.gateway;
+using API.Models.json;
 
 namespace API.Services
 {
     public class ServiceDisplayService
     {
-        private readonly ApiGatewayContext _dbContext;
+        private readonly IServiceDisplayDAO _serviceDisplayDAO;
 
         public ServiceDisplayService(ApiGatewayContext dbContext)
         {
-            _dbContext = dbContext;
-
+            _serviceDisplayDAO = new SqlServiceDisplayDAO(dbContext);
         }
-        //TODO: Validate the Token
-
 
         //Load all data beside the team that sent request
-        public ICollection<Service> LoadData(string teamName)
+        public ICollection<ServiceDisplayResp> LoadData(string clientId)
         {
+            ICollection<ServiceDisplayResp> resultSet = null;
             //Make sure input apikey is not empty and meet the length requirement
-            if (String.IsNullOrWhiteSpace(teamName) || teamName.Length != Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)))
-                return null;
+            if (!String.IsNullOrWhiteSpace(clientId))
+            {
+                resultSet = _serviceDisplayDAO.GetAllData(clientId);
 
-            IServiceDisplayDAO dao = new SqlServiceDisplayDAO(_dbContext);
-            if (dao.IfTeamExist(teamName))
-                return dao.GetAllData(teamName);
-            else
-                return null;
+            }
+
+            return resultSet;
+        }
+
+        public bool IfClientExist(string clientId)
+        {
+            if (!String.IsNullOrWhiteSpace(clientId))
+                return _serviceDisplayDAO.IfClientExist(clientId);
+
+            return false;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using API.DAL;
 using API.Models.gateway;
+using API.Models.json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,7 +21,7 @@ namespace API_Gateway_UnitTests
             var option = new DbContextOptionsBuilder<ApiGatewayContext>()
                 .UseInMemoryDatabase(databaseName: "GetAllData_Pass_Database")
                 .Options;
-            ICollection<Service> registeredServices;
+            ICollection<ServiceDisplayResp> registeredServices;
 
             //Act  
             using (var context = new ApiGatewayContext(option))
@@ -82,7 +83,7 @@ namespace API_Gateway_UnitTests
         {   //Arrange
             bool expected = false;
             bool actual = false;
-            ICollection<Service> registeredServices;
+            ICollection<ServiceDisplayResp> registeredServices;
 
             //Act
             using (var context = new ApiGatewayContext())
@@ -107,7 +108,7 @@ namespace API_Gateway_UnitTests
         {   //Arrange
             bool expected = false;
             bool actual = false;
-            ICollection<Service> registeredServices;
+            ICollection<ServiceDisplayResp> registeredServices;
 
             //Act
             using (var context = new ApiGatewayContext())
@@ -130,7 +131,7 @@ namespace API_Gateway_UnitTests
         {   //Arrange
             bool expected = false;
             bool actual = false;
-            ICollection<Service> registeredServices;
+            ICollection<ServiceDisplayResp> registeredServices;
 
             //Act
             using (var context = new ApiGatewayContext())
@@ -155,7 +156,7 @@ namespace API_Gateway_UnitTests
         {   //Arrange
             bool expected = false;
             bool actual = false;
-            ICollection<Service> registeredServices;
+            ICollection<ServiceDisplayResp> registeredServices;
 
             //Act
             using (var context = new ApiGatewayContext())
@@ -180,7 +181,7 @@ namespace API_Gateway_UnitTests
         {   //Arrange
             bool expected = false;
             bool actual = false;
-            ICollection<Service> registeredServices;
+            ICollection<ServiceDisplayResp> registeredServices;
             var option = new DbContextOptionsBuilder<ApiGatewayContext>()
                 .UseInMemoryDatabase(databaseName: "GetAllData_Empty_database")
                 .Options;
@@ -225,7 +226,7 @@ namespace API_Gateway_UnitTests
                 SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
 
                 //Different from GetAllData, check if a team exist need the same random key
-                actual = sqlServiceDisplayDAO.IfTeamExist(randomKey);
+                actual = sqlServiceDisplayDAO.IfClientExist(randomKey);
             }
 
             //Assert
@@ -245,7 +246,7 @@ namespace API_Gateway_UnitTests
             using (var context = new ApiGatewayContext(option))
             {
                 SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
-                actual = sqlServiceDisplayDAO.IfTeamExist(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User))));
+                actual = sqlServiceDisplayDAO.IfClientExist(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User))));
             }
 
             //Assert
@@ -262,7 +263,7 @@ namespace API_Gateway_UnitTests
             using (var context = new ApiGatewayContext())
             {
                 SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
-                actual = sqlServiceDisplayDAO.IfTeamExist(null);
+                actual = sqlServiceDisplayDAO.IfClientExist(null);
             }
 
             //Assert
@@ -279,7 +280,7 @@ namespace API_Gateway_UnitTests
             using (var context = new ApiGatewayContext())
             {
                 SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
-                actual = sqlServiceDisplayDAO.IfTeamExist("");
+                actual = sqlServiceDisplayDAO.IfClientExist("");
             }
 
             //Assert
@@ -296,7 +297,7 @@ namespace API_Gateway_UnitTests
             using (var context = new ApiGatewayContext())
             {
                 SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
-                actual = sqlServiceDisplayDAO.IfTeamExist(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) + 1));
+                actual = sqlServiceDisplayDAO.IfClientExist(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) + 1));
             }
 
             //Assert
@@ -313,7 +314,7 @@ namespace API_Gateway_UnitTests
             using (var context = new ApiGatewayContext())
             {
                 SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
-                actual = sqlServiceDisplayDAO.IfTeamExist(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) - 1));
+                actual = sqlServiceDisplayDAO.IfClientExist(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) - 1));
             }
 
             //Assert
