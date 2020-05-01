@@ -6,20 +6,19 @@ using API.Models.json;
 
 namespace API.Services
 {
-    public class ServiceDisplayService
+    public class ServiceDiscoveryService
     {
-        private readonly IServiceDisplayDAO _serviceDisplayDAO;
+        private readonly ServiceDiscoveryDAO _serviceDisplayDAO;
 
-        public ServiceDisplayService(ApiGatewayContext dbContext)
+        public ServiceDiscoveryService(ApiGatewayContext dbContext)
         {
-            _serviceDisplayDAO = new SqlServiceDisplayDAO(dbContext);
+            _serviceDisplayDAO = new ServiceDiscoveryDAO(dbContext);
         }
 
         //Load all data beside the team that sent request
         public ICollection<ServiceDisplayResp> LoadData(string clientId)
         {
             ICollection<ServiceDisplayResp> resultSet = null;
-            //Make sure input apikey is not empty and meet the length requirement
             if (!String.IsNullOrWhiteSpace(clientId))
             {
                 resultSet = _serviceDisplayDAO.GetAllData(clientId);
@@ -31,10 +30,11 @@ namespace API.Services
 
         public bool IfClientExist(string clientId)
         {
+            var ifClientExist = false;
             if (!String.IsNullOrWhiteSpace(clientId))
-                return _serviceDisplayDAO.IfClientExist(clientId);
+                ifClientExist = _serviceDisplayDAO.IfClientExist(clientId);
 
-            return false;
+            return ifClientExist;
         }
     }
 }

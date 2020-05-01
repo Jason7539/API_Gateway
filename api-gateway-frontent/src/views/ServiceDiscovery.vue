@@ -6,13 +6,13 @@
           data =>
             !search ||
             data.username.toLowerCase().includes(search.toLowerCase()) ||
-            data.endPoint.toLowerCase().includes(search.toLowerCase()) ||
+            data.endpoint.toLowerCase().includes(search.toLowerCase()) ||
             data.input.toLowerCase().includes(search.toLowerCase()) ||
             data.output.toLowerCase().includes(search.toLowerCase()) ||
             data.dataformat.toLowerCase().includes(search.toLowerCase())
         )
       "
-      :default-sort="{ prop: 'endPoint', order: 'ascending' }"
+      :default-sort="{ prop: 'endpoint', order: 'ascending' }"
       style="width: 100% "
       stripe
     >
@@ -25,7 +25,7 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="endPoint" label="EndPoint" width="180" sortable>
+      <el-table-column prop="endpoint" label="EndPoint" width="180" sortable>
       </el-table-column>
       <el-table-column prop="username" label="Team" width="180">
       </el-table-column>
@@ -33,7 +33,7 @@
       </el-table-column>
       <el-table-column prop="output" label="Output Type" width="180">
       </el-table-column>
-      <el-table-column prop="dataformat" label="Data Format" width="180">
+      <el-table-column prop="dataFormat" label="Data Format" width="180">
       </el-table-column>
       <el-table-column align="right">
         <template slot="header" slot-scope="{}">
@@ -54,6 +54,7 @@
 import Vue from "vue";
 import Element from "element-ui";
 import ErrorStatus from "@/components/ErrorStatus.vue";
+import * as global from "../globalExports.js";
 Vue.use(Element, { size: "small", zIndex: 3000 });
 export default {
   name: "ServiceDiscovery",
@@ -63,52 +64,47 @@ export default {
   data() {
     return {
       availableServices: [],
-      search: ""
+      search: "",
+      DialogHeadline: "",
+      dialog: false,
+      DialogMessage: ""
     };
   },
-  methods: {
-    DisplayService() {
-      // If the form is valid post to backend.
-      if (this.$data.accessToken != "") {
-        // Submit post request
-        fetch(`${global.ApiDomainName}/api/ServiceDiscovery/DisplayServices`, {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            ClientId: this.$data.ClientId,
-            Password: this.$data.Password
-          })
-        })
-          .then(response => {
-            // Proccess response status code
-            if (!response.ok) {
-              throw Error("response error");
-            }
-            // Process response as json
-            return response.json();
-          })
-          .then(data => {
-            data.forEach(i => {
-              this.availableServices.push(i);
-            });
-          })
-          .catch(error => {
-            // For unexpected errors display error page.
-            console.log(error);
-            this.DialogHeadline = "Unexpected error has occurred";
-            this.DialogMessage = "Please contact system admin";
-            this.dialog = true;
-          });
-      } else {
-        this.DialogMessage = "Please login first";
-        this.dialog = true;
+  methods: {},
+  created() {
+    // Submit post request
+    fetch(
+      `${global.ApiDomainName}/api/ServiceDiscovery/DisplayServices/${this.$store.state.ClientId}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          Authorization: "Bearer " + this.$store.state.AccessToken,
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
       }
-    }
+    )
+      .then(response => {
+        // Proccess response status code
+        if (!response.ok) {
+          throw Error("response error");
+        }
+        // Process response as json
+        return response.json();
+      })
+      .then(data => {
+        data.forEach(service => {
+          this.availableServices.push(service);
+        });
+      })
+      .catch(error => {
+        // For unexpected errors display error page.
+        console.log(error);
+        this.DialogHeadline = "Unexpected error has occurred";
+        this.DialogMessage = "Please contact system admin";
+        this.dialog = true;
+      });
   }
 };
 </script>

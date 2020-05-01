@@ -14,9 +14,9 @@ namespace API.Models.json
         public string Dataformat { get; set; }
         public string Description { get; set; }
 
-        public ServiceDisplayResp(string  endPoint, string username, string input, string output, string dataformat, string description)
+        public ServiceDisplayResp(string  endpoint, string username, string input, string output, string dataformat, string description)
         {
-            Endpoint = endPoint;
+            Endpoint = endpoint;
             Username = username;
             Input = input;
             Output = output;

@@ -58,7 +58,7 @@ namespace API_Gateway_UnitTests
                 context.Configuration.Add(configForTesting);
                 context.SaveChanges();
 
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
         
                 registeredServices = sqlServiceDisplayDAO.GetAllData(randomId);
                 if (registeredServices.Count > 0)
@@ -67,7 +67,7 @@ namespace API_Gateway_UnitTests
 
             foreach (var service in registeredServices)
             {
-                Trace.WriteLine(service.ToString() + Environment.NewLine);
+                Trace.WriteLine(service.Endpoint +" "+ service.Username+" "+service.Input+" "+service.Output+" "+service.Dataformat+" "+service.Description+Environment.NewLine);
             }
 
             //Assert
@@ -88,7 +88,7 @@ namespace API_Gateway_UnitTests
             //Act
             using (var context = new ApiGatewayContext())
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 registeredServices = sqlServiceDisplayDAO.GetAllData(null);
             }
 
@@ -113,7 +113,7 @@ namespace API_Gateway_UnitTests
             //Act
             using (var context = new ApiGatewayContext())
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 registeredServices = sqlServiceDisplayDAO.GetAllData("");
             }
 
@@ -136,7 +136,7 @@ namespace API_Gateway_UnitTests
             //Act
             using (var context = new ApiGatewayContext())
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 //Generate a random key that is longer than the requirement
                 string randomTestKey = GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) + 1);
                 registeredServices = sqlServiceDisplayDAO.GetAllData(randomTestKey);
@@ -161,7 +161,7 @@ namespace API_Gateway_UnitTests
             //Act
             using (var context = new ApiGatewayContext())
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 //Generate a random key that is longer than the requirement
                 string randomTestKey = GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) - 1);
                 registeredServices = sqlServiceDisplayDAO.GetAllData(randomTestKey);
@@ -188,7 +188,7 @@ namespace API_Gateway_UnitTests
             //Act
             using (var context = new ApiGatewayContext(option))
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 registeredServices = sqlServiceDisplayDAO.GetAllData(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User))));
             }
 
@@ -223,7 +223,7 @@ namespace API_Gateway_UnitTests
                 context.Team.Add(teamForTesting);
                 context.SaveChanges();
 
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
 
                 //Different from GetAllData, check if a team exist need the same random key
                 actual = sqlServiceDisplayDAO.IfClientExist(randomKey);
@@ -245,7 +245,7 @@ namespace API_Gateway_UnitTests
             //Act  
             using (var context = new ApiGatewayContext(option))
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 actual = sqlServiceDisplayDAO.IfClientExist(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User))));
             }
 
@@ -262,7 +262,7 @@ namespace API_Gateway_UnitTests
             //Act  
             using (var context = new ApiGatewayContext())
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 actual = sqlServiceDisplayDAO.IfClientExist(null);
             }
 
@@ -279,7 +279,7 @@ namespace API_Gateway_UnitTests
             //Act  
             using (var context = new ApiGatewayContext())
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 actual = sqlServiceDisplayDAO.IfClientExist("");
             }
 
@@ -296,7 +296,7 @@ namespace API_Gateway_UnitTests
             //Act  
             using (var context = new ApiGatewayContext())
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 actual = sqlServiceDisplayDAO.IfClientExist(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) + 1));
             }
 
@@ -313,7 +313,7 @@ namespace API_Gateway_UnitTests
             //Act  
             using (var context = new ApiGatewayContext())
             {
-                SqlServiceDisplayDAO sqlServiceDisplayDAO = new SqlServiceDisplayDAO(context);
+                ServiceDiscoveryDAO sqlServiceDisplayDAO = new ServiceDiscoveryDAO(context);
                 actual = sqlServiceDisplayDAO.IfClientExist(GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) - 1));
             }
 

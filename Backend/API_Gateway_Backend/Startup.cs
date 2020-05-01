@@ -99,7 +99,7 @@ namespace API_Gateway_Controllers
             services.AddTransient<JWTService>();
             services.AddTransient<ServiceManagementService>();
             services.AddTransient<UrlValidationService>();
-            services.AddTransient<ServiceDisplayService>();
+            services.AddTransient<ServiceDiscoveryService>();
 
             //services.AddTransient<HttpContext>();
 
@@ -107,7 +107,7 @@ namespace API_Gateway_Controllers
             services.AddTransient<TeamRegistrationManager>();
             services.AddTransient<TeamLoginManager>();
             services.AddTransient<ServiceManagementManager>();
-            services.AddTransient<ServiceDisplayManager>();
+            services.AddTransient<ServiceDiscoveryManager>();
 
         }
 
