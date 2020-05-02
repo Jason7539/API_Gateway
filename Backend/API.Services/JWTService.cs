@@ -12,10 +12,19 @@ namespace API.Services
 {
     public class JWTService
     {
-
-        // Takes in claims.
         // https://tools.ietf.org/html/rfc7518#section-3.2 
         // Key same size has hash algorithms output.
+
+        /// <summary>
+        /// Creates a encoded and signedd JWT.
+        /// </summary>
+        /// <param name="auidience">Specify audience claim</param>
+        /// <param name="scope">Specify scope claim</param>
+        /// <param name="issuer">Specify issuer claim</param>
+        /// <param name="issuedAt">Specify issuedAt claim</param>
+        /// <param name="expiredAt">Specify expiredAt claim</param>
+        /// <param name="key">Key to sign the JWT</param>
+        /// <returns>String representing jwt token</returns>
         public string GenerateHmacSignedJWTToken(string auidience, string scope, string issuer, DateTime issuedAt, DateTime expiredAt, string key)
         {
             // Create token handler to create JWT.
@@ -24,7 +33,7 @@ namespace API.Services
             // Retrieve key used for JWT signing.
             var Signingkey = Convert.FromBase64String(key);
 
-            // List of claims for the JWT.
+            // Add scope claim for the JWT.
             var payload = new ClaimsIdentity( new Claim[]{
                 new Claim(Constants.Scope, scope),
             });
@@ -37,10 +46,10 @@ namespace API.Services
         }
 
         /// <summary>
-        /// Validates a JWT token. 
+        /// Validates a JWT token
         /// </summary>
-        /// <param name="token">String representation of the token.</param>
-        /// <returns>bool representing whether the token is valid.</returns>
+        /// <param name="token">String representation of the token</param>
+        /// <returns>bool representing whether the token is valid</returns>
         public bool ValidateHmacSignedJWTToken(string token)
         {
             try
@@ -51,7 +60,7 @@ namespace API.Services
                     // Signing key to test.
                     IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(Constants.SigningKey)),
 
-                    // Flat to specify what to test.
+                    // Flag to specify what to test.
                     ValidateIssuerSigningKey = true,
                     RequireSignedTokens = true,
                     ValidateIssuer = true,

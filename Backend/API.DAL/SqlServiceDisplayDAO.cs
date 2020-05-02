@@ -20,7 +20,6 @@ namespace API.DAL
             if (String.IsNullOrWhiteSpace(teamName) || teamName.Length != Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)))
                 return null;
 
-            //IfPublic 0 = private 1 = public
             using (_dbContext)
             {
                 if (!_dbContext.Configuration.Any())
