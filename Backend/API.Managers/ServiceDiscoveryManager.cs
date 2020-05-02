@@ -15,6 +15,12 @@ namespace API.Managers
         {
             _serviceDiscoveryService = serviceDiscoveryService;
         }
+
+        /// <summary>
+        /// Get a list of available services for a client based on the clientId
+        /// </summary>
+        /// <param name="clientId">the clientId from front end that login to the system to view services</param>
+        /// <returns>resultSet a list of services that are open to the client based on clientId</returns>
         public ICollection<ServiceDisplayResp> GetAvailableServices(string clientId)
         {
             ICollection<ServiceDisplayResp> resultSet = null; 
@@ -25,7 +31,7 @@ namespace API.Managers
 
 
             if (_serviceDiscoveryService.IfClientExist(clientId))
-                resultSet = _serviceDiscoveryService.LoadData(clientId);
+                resultSet = _serviceDiscoveryService.GetServices(clientId);
             
             return resultSet;
         }

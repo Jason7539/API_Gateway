@@ -15,19 +15,27 @@ namespace API.Services
             _serviceDisplayDAO = new ServiceDiscoveryDAO(dbContext);
         }
 
-        //Load all data beside the team that sent request
-        public ICollection<ServiceDisplayResp> LoadData(string clientId)
+        /// <summary>
+        /// Get a list of available services for a client based on the clientId
+        /// </summary>
+        /// <param name="clientId">the clientId from front end that login to the system to view services</param>
+        /// <returns>resultSet a list of services that are open to the client based on clientId</returns>
+        public ICollection<ServiceDisplayResp> GetServices(string clientId)
         {
             ICollection<ServiceDisplayResp> resultSet = null;
             if (!String.IsNullOrWhiteSpace(clientId))
             {
-                resultSet = _serviceDisplayDAO.GetAllData(clientId);
+                resultSet = _serviceDisplayDAO.GetServices(clientId);
 
             }
-
             return resultSet;
         }
 
+        /// <summary>
+        /// Check if a client exist in the database
+        /// </summary>
+        /// <param name="clientId">the clientId from front end that login to the system to view services</param>
+        /// <returns>bool if the clientId can be found in the database</returns>
         public bool IfClientExist(string clientId)
         {
             var ifClientExist = false;
