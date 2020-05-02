@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 
 namespace API.Services
@@ -13,11 +14,11 @@ namespace API.Services
         IStep Next{get;set;}
         bool Async { get; set; }
         string Action { get; set; }
-        bool OutputRequired { get; set; }
+        //bool OutputRequired { get; set; }
         string HttpMethod { get; set; }
         string[] ArrayParameterTypes { get; set; }
         string[] ArrayParameterNames { get; set; }
-        void Execute();
-        
+        HttpRequestMessage Message { get; set; }
+
     }
 }

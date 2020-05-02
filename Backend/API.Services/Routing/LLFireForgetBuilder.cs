@@ -1,9 +1,11 @@
 ﻿using API.Models.gateway;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Protocols.WSIdentity;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 
 namespace API.Services
@@ -40,24 +42,55 @@ namespace API.Services
                 IStep step = new Step
                 {
                     Async = (bool)setup.GetValue("Async"),
-                    OutputRequired = (bool)setup.GetValue("OutputRequired"),
+                    //OutputRequired = (bool)setup.GetValue("OutputRequired"),
                     Action = setup.GetValue("Action").ToString(),
                     ArrayParameterTypes = setup.GetValue("ParameterDataTypes").ToObject<string[]>(),
                     ArrayParameterNames = setup.GetValue("ParameterNames").ToObject<string[]>(),
                     HttpMethod = setup.GetValue("HttpMethod").ToString()
                 };
+                step.Message = CraftHttpRequestMessage(step.HttpMethod, step.Action);
 
                 fireForgetRouter.Steps[iter] = step;
                 iter++;
             }
 
-
-
-
             return fireForgetRouter;
         }
 
-        
+        private HttpRequestMessage CraftHttpRequestMessage(string methodType, string action)
+        {
+            HttpRequestMessage message;
+            switch (methodType)
+            {
+                case "HEAD":
+                    message = new HttpRequestMessage(HttpMethod.Head, action);
+                    break;
+                case "GET":
+                    message = new HttpRequestMessage(HttpMethod.Get, action);
+                    break;
+                case "POST":
+                    message = new HttpRequestMessage(HttpMethod.Post, action);
+                    break;
+                case "PUT":
+                    message = new HttpRequestMessage(HttpMethod.Put, action);
+                    break;
+                case "DELETE":
+                    message = new HttpRequestMessage(HttpMethod.Delete, action);
+                    break;
+                case "OPTIONS":
+                    message = new HttpRequestMessage(HttpMethod.Options, action);
+                    break;
+                case "TRACE":
+                    message = new HttpRequestMessage(HttpMethod.Trace, action);
+                    break;
+                default:
+                    throw new InvalidInputException("MethodType was not a proper type");
+            }
+
+            return message;
+        }
+
+
 
     }
 }
