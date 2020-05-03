@@ -97,6 +97,7 @@ namespace API_Gateway_Controllers
             services.AddTransient<TeamRegistrationService>();
             services.AddTransient<TeamLoginService>();
             services.AddTransient<JWTService>();
+            services.AddTransient<LLFireForgetBuilder>();
             services.AddTransient<ServiceManagementService>();
             services.AddTransient<UrlValidationService>();
 
@@ -106,6 +107,7 @@ namespace API_Gateway_Controllers
             services.AddTransient<TeamRegistrationManager>();
             services.AddTransient<TeamLoginManager>();
             services.AddTransient<ServiceManagementManager>();
+            services.AddTransient<RoutingManager>();
             
         }
 

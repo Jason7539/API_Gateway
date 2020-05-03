@@ -11,14 +11,15 @@ namespace API.Services
     /// </summary>
     public interface IStep
     {
-        IStep Next{get;set;}
+        //IStep Next{get;set;}
         bool Async { get; set; }
-        string Action { get; set; }
+        //string Action { get; set; }
         //bool OutputRequired { get; set; }
-        string HttpMethod { get; set; }
+        //string HttpMethod { get; set; }
         string[] ArrayParameterTypes { get; set; }
         string[] ArrayParameterNames { get; set; }
         HttpRequestMessage Message { get; set; }
+        dynamic ExecuteStep(dynamic pastResult);
 
     }
 }

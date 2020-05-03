@@ -13,31 +13,40 @@ namespace API.Managers
     /// </summary>
     public class RoutingManager
     {
-        public RoutingManager() { }
-
-
-        public void RouteExecute(AuthorizationHandlerContext authContext, string serviceConfigID, string callbackUrl)
+        ILLBuilder Builder { get; set; }
+        JWTService AuthService { get; set; }
+        public RoutingManager(JWTService authService, ILLBuilder builder) 
         {
-            var urlValidation = new UrlValidationService();
-            var builder = new LLFireForgetBuilder();
+            AuthService = AuthService;
+            Builder = builder;
+        }
+
+        //change to use authService and accept the http request object
+        public HttpResponseMessage RouteExecute(AuthorizationHandlerContext authContext, string serviceConfigID, string callbackUrl)
+        {
+            HttpResponseMessage message;
             ILLRouter router;
             try
             {
-                router = builder.Build(authContext, serviceConfigID);
+                router = Builder.Build(authContext, serviceConfigID);
                 router.Execute();
                
             }
             catch (UriFormatException e)
             {
-                
+                throw;
             }
-            catch (InvalidInputException e)
+            catch (InvalidCastException e)
+            {
+                throw;
+            }
+            catch(InvalidInputException e)
             {
 
             }
             catch (Exception e)
             {
-
+                throw;
             }
             
 

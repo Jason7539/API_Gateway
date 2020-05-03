@@ -43,12 +43,13 @@ namespace API.Services
                 {
                     Async = (bool)setup.GetValue("Async"),
                     //OutputRequired = (bool)setup.GetValue("OutputRequired"),
-                    Action = setup.GetValue("Action").ToString(),
+                    //
                     ArrayParameterTypes = setup.GetValue("ParameterDataTypes").ToObject<string[]>(),
-                    ArrayParameterNames = setup.GetValue("ParameterNames").ToObject<string[]>(),
-                    HttpMethod = setup.GetValue("HttpMethod").ToString()
+                    ArrayParameterNames = setup.GetValue("ParameterNames").ToObject<string[]>()
                 };
-                step.Message = CraftHttpRequestMessage(step.HttpMethod, step.Action);
+                var action = setup.GetValue("Action").ToString();
+                var method = setup.GetValue("HttpMethod").ToString();
+                step.Message = CraftHttpRequestMessage(method, action);
 
                 fireForgetRouter.Steps[iter] = step;
                 iter++;
@@ -84,9 +85,8 @@ namespace API.Services
                     message = new HttpRequestMessage(HttpMethod.Trace, action);
                     break;
                 default:
-                    throw new InvalidInputException("MethodType was not a proper type");
+                    throw new InvalidCastException("MethodType was not a proper type");
             }
-
             return message;
         }
 
