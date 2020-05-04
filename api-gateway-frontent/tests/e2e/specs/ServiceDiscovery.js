@@ -63,7 +63,7 @@ describe("Service filter not Pass no matched result", () => {
   });
 });
 
-//Success Condition for Service Discovery
+//Success Condition for Service Discovery unavailable services not vivible
 describe("Service Display Pass unavailable services not vivible", () => {
   it("Login as teamTestingB and then display available services", () => {
     // Arrange login and go to the serviceDiscovery page

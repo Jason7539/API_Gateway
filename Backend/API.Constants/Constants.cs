@@ -20,6 +20,7 @@ namespace API.AppConstants
         public static readonly int HashLength = 32;
         public static readonly int HashIteration = 10000;
         public static readonly int saltLength = 32;
+        public static readonly int clientIdLength = 36;
 
         // JWT INFORMATION
         public static readonly string Issuer = "Spring2020APIGateway";      // TODO: update to api domain.
