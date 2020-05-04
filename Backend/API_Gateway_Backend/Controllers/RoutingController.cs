@@ -27,9 +27,10 @@ namespace API_Gateway_Controllers.Controllers
       
         // api/<controller>/
         [RequireHttps]
-        public IActionResult Index()
+        [Route("/{**catchAll}")]
+        public IActionResult Index(String actionFromUrl)
         {
-            //var urlString = Request.UToString(); needs work
+            //actionFromUrl will contain all url after the api/controller/
             var bodyString = Request.Body.ToString();
             var httpMethod = Request.Method;
             StringValues authToken;
@@ -38,8 +39,6 @@ namespace API_Gateway_Controllers.Controllers
             {
                 return Unauthorized( "Unauthorized Access");
             }
-
-
 
             try
             {
@@ -60,6 +59,10 @@ namespace API_Gateway_Controllers.Controllers
             catch(UnauthorizedAccessException)
             {
                 return Unauthorized("Unauthorized Access");
+            }
+            catch(Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
         }

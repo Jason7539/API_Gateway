@@ -22,15 +22,17 @@ namespace API.Managers
         }
 
         //change to use authService and accept the http request object
-        public HttpResponseMessage RouteExecute(AuthorizationHandlerContext authContext, string serviceConfigID, string callbackUrl)
+        public HttpResponseMessage RouteExecute(String authContext, string serviceConfigID, string callbackUrl)
         {
             HttpResponseMessage message;
             ILLRouter router;
             try
             {
-                router = Builder.Build(authContext, serviceConfigID);
-                router.Execute();
-               
+                if (AuthService.ValidateHmacSignedJWTToken(authContext))
+                {
+                    router = Builder.Build(authContext, serviceConfigID);
+                    router.Execute();
+                }
             }
             catch (UriFormatException e)
             {

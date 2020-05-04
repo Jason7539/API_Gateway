@@ -17,9 +17,11 @@ namespace API.Services
     {
         public LLFireForgetBuilder() { }
 
-        public ILLRouter Build(AuthorizationHandlerContext authContext, string serviceConfigId)
+        public ILLRouter Build(String authContext, string serviceConfigId)
         {
-            var clientID = authContext.User.FindFirst("ClinetID")?.Value;
+
+            //fix how we find the client id here so we can compare properly
+            var clientID = authContext.User.FindFirst("ClientID")?.Value;
             string configData;
             using (var context = new ApiGatewayContext())
             {

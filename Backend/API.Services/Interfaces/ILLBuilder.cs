@@ -10,7 +10,7 @@ namespace API.Services
     /// </summary>
     public interface ILLBuilder
     {
-        ILLRouter Build(AuthorizationHandlerContext authContext, string serviceConfigData);
+        ILLRouter Build(String authContext, string serviceConfigData);
 
     }
 }
