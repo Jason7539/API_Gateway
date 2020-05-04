@@ -99,6 +99,7 @@ namespace API_Gateway_Controllers
             services.AddTransient<JWTService>();
             services.AddTransient<ServiceManagementService>();
             services.AddTransient<UrlValidationService>();
+            services.AddTransient<ServiceDiscoveryService>();
 
             //services.AddTransient<HttpContext>();
 
@@ -106,7 +107,8 @@ namespace API_Gateway_Controllers
             services.AddTransient<TeamRegistrationManager>();
             services.AddTransient<TeamLoginManager>();
             services.AddTransient<ServiceManagementManager>();
-            
+            services.AddTransient<ServiceDiscoveryManager>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
