@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Managers;
 using API.Models.json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_Gateway_Controllers.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ServiceDiscoveryController : ControllerBase

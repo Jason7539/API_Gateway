@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using API.AppConstants;
 using API.Models.gateway;
 using API.Models.json;
 using API.Services;
@@ -23,10 +24,10 @@ namespace API.Managers
         /// <returns>resultSet a list of services that are open to the client based on clientId</returns>
         public ICollection<ServiceDisplayResp> GetAvailableServices(string clientId)
         {
-            ICollection<ServiceDisplayResp> resultSet = null; 
+            ICollection<ServiceDisplayResp> resultSet = null;
 
-            if (String.IsNullOrWhiteSpace(clientId)||
-                clientId.Length != Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)))
+            if (String.IsNullOrWhiteSpace(clientId) ||
+                clientId.Length != Constants.clientIdLength)
                 return null;
 
 

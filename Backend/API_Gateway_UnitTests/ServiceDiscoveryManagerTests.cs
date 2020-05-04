@@ -1,4 +1,5 @@
-﻿using API.Managers;
+﻿using API.AppConstants;
+using API.Managers;
 using API.Models.gateway;
 using API.Models.json;
 using API.Services;
@@ -141,7 +142,7 @@ namespace API_Gateway_UnitTests
                 var serviceDiscoveryService = new ServiceDiscoveryService(context);
                 var serviceDiscoveryManager = new ServiceDiscoveryManager(serviceDiscoveryService);
                 //Generate a key that is longer than requirement
-                var randomId = GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User))+1);
+                var randomId = GenerateRandomKey(Constants.clientIdLength + 1);
                 registeredServices = serviceDiscoveryManager.GetAvailableServices(randomId);
             }
 
@@ -166,7 +167,7 @@ namespace API_Gateway_UnitTests
                 var serviceDiscoveryService = new ServiceDiscoveryService(context);
                 var serviceDiscoveryManager = new ServiceDiscoveryManager(serviceDiscoveryService);
                 //Generate a key that is shorter than requirement
-                var randomId = GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) - 1);
+                var randomId = GenerateRandomKey(Constants.clientIdLength - 1);
                 registeredServices = serviceDiscoveryManager.GetAvailableServices(randomId);
             }
 
