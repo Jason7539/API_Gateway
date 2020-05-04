@@ -29,7 +29,7 @@ namespace API_Gateway_UnitTests
             {
                 // Create a team first
                 var teamForTesting = new Team();
-                string randomId = GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)));
+                var randomId = GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)));
                 teamForTesting.ClientId = randomId;
                 teamForTesting.WebsiteUrl = "testingWebSiteUrl";
                 teamForTesting.Secret = "testingSecret";
@@ -118,6 +118,56 @@ namespace API_Gateway_UnitTests
                 var serviceDiscoveryService = new ServiceDiscoveryService(context);
                 var serviceDiscoveryManager = new ServiceDiscoveryManager(serviceDiscoveryService);
                 registeredServices = serviceDiscoveryManager.GetAvailableServices("");
+            }
+
+            //Since input is invalid, the registeredServices should be null
+            if (registeredServices != null)
+                actual = true;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        //Fail condition for ServiceDiscoveryManager.GetAvailableServices(), when input is too long, return no data
+        public void GetServices_NotPass_InputTooLong()
+        {   //Arrange
+            var expected = false;
+            var actual = false;
+            ICollection<ServiceDisplayResp> registeredServices;
+
+            //Act
+            using (var context = new ApiGatewayContext())
+            {
+                var serviceDiscoveryService = new ServiceDiscoveryService(context);
+                var serviceDiscoveryManager = new ServiceDiscoveryManager(serviceDiscoveryService);
+                //Generate a key that is longer than requirement
+                var randomId = GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User))+1);
+                registeredServices = serviceDiscoveryManager.GetAvailableServices(randomId);
+            }
+
+            //Since input is invalid, the registeredServices should be null
+            if (registeredServices != null)
+                actual = true;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        //Fail condition for ServiceDiscoveryManager.GetAvailableServices(), when input is too short, return no data
+        public void GetServices_NotPass_InputTooShort()
+        {   //Arrange
+            var expected = false;
+            var actual = false;
+            ICollection<ServiceDisplayResp> registeredServices;
+
+            //Act
+            using (var context = new ApiGatewayContext())
+            {
+                var serviceDiscoveryService = new ServiceDiscoveryService(context);
+                var serviceDiscoveryManager = new ServiceDiscoveryManager(serviceDiscoveryService);
+                //Generate a key that is shorter than requirement
+                var randomId = GenerateRandomKey(Int32.Parse(Environment.GetEnvironmentVariable("APIKeyInputLength", EnvironmentVariableTarget.User)) - 1);
+                registeredServices = serviceDiscoveryManager.GetAvailableServices(randomId);
             }
 
             //Since input is invalid, the registeredServices should be null
