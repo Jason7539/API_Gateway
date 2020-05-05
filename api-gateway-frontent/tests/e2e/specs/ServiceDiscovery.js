@@ -199,7 +199,7 @@ describe("Service Display Pass display service for new team", () => {
     cy.get("button[id='Create']").click();
 
     cy.contains("Service successfully created");
-     cy.contains("Accept").click();
+    cy.contains("Accept").click();
 
     // Act move to serviceDiscovery page, apply filter
     cy.visit("http://localhost:8080/#/ServiceDiscovery");

@@ -25,36 +25,44 @@ namespace API.DAL
             ICollection<ServiceDisplayResp> resultSet = null;
             if (!String.IsNullOrWhiteSpace(clientId))
             {
-                    if (_dbContext.Configuration.Where(a => a.OpenTo == clientId).Any())
+                if (_dbContext.Configuration.Where(a => a.OpenTo == clientId).Any())
+                {
+
+                    var endPointList = _dbContext.Configuration.Where(a => a.OpenTo == clientId).Select(a => a.EndPoint).Distinct();
+                    var dataSet = _dbContext.Service.Join(_dbContext.Team, service => service.Owner,
+                    team => team.ClientId, (service, team) => new
                     {
-                        
-                        var endPointList = _dbContext.Configuration.Where(a => a.OpenTo == clientId).Select(a => a.EndPoint).Distinct();
-                        var dataSet = _dbContext.Service.Join(_dbContext.Team, service => service.Owner,
-                        team => team.ClientId, (service, team) => new
-                        {
-                            team.Username,
-                            service.Endpoint,
-                            service.Input,
-                            service.Output,
-                            service.Dataformat,
-                            service.Description
-                        }
-                         ).Where(a => endPointList.Contains(a.Endpoint)).OrderBy(a => a.Username).ToList();
-
-                            resultSet = new List<ServiceDisplayResp>();
-
-                            foreach (var service in dataSet)
-                            {
-                                resultSet.Add(new ServiceDisplayResp(service.Endpoint, service.Username, service.Input, service.Output, service.Dataformat, service.Description));
-                            }
-                     
-                      
+                        team.Username,
+                        service.Endpoint,
+                        service.Input,
+                        service.Output,
+                        service.Dataformat,
+                        service.Description
                     }
-            }
+                     ).Where(a => endPointList.Contains(a.Endpoint)).OrderBy(a => a.Username).ToList();
 
+                    resultSet = new List<ServiceDisplayResp>();
+
+                    foreach (var service in dataSet)
+                    {
+                        resultSet.Add(new ServiceDisplayResp()
+                        {
+                            Endpoint = service.Endpoint,
+                            Username = service.Username,
+                            Input = service.Input,
+                            Output = service.Output,
+                            Dataformat = service.Dataformat,
+                            Description = service.Description
+                        });
+
+
+                    }
+                }
+
+          
+            }
             return resultSet;
         }
-
         /// <summary>
         /// Check if a client exist in the database
         /// </summary>
