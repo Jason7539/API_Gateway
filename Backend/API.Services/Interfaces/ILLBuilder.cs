@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace API.Services
     /// </summary>
     public interface ILLBuilder
     {
-        ILLRouter Build(String authContext, string serviceConfigData);
+        ILLRouter Build(HttpRequest initialRequest, string authContext, string serviceConfigData);
 
     }
 }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 
 namespace API.Services
@@ -12,6 +14,6 @@ namespace API.Services
         IStep[] Steps { get; set; }
         int ReturnStep { get; set; }
         string CallbackUrl { get; set; }
-        void Execute();
+        HttpResponseMessage Execute();
     }
 }

@@ -1,8 +1,14 @@
 ﻿using API.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Claims;
 using Microsoft.IdentityModel.Protocols.WSIdentity;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -14,6 +20,7 @@ namespace API.Managers
     public class RoutingManager
     {
         ILLBuilder Builder { get; set; }
+        ILLRouter Router { get; set; }
         JWTService AuthService { get; set; }
         public RoutingManager(JWTService authService, ILLBuilder builder) 
         {
@@ -22,17 +29,25 @@ namespace API.Managers
         }
 
         //change to use authService and accept the http request object
-        public HttpResponseMessage RouteExecute(String authContext, string serviceConfigID, string callbackUrl)
+        public HttpResponseMessage RouteExecute(HttpRequest message)
         {
-            HttpResponseMessage message;
-            ILLRouter router;
+            //actionFromUrl will contain all url after the api/controller/
+            var bodyString = message.Body.ToString();
+            var httpMethod = message.Method;
+            
+            StringValues authToken;
+            message.Headers.TryGetValue("Authorization", out authToken);
+            if (authToken.Count == 0)
+            {
+                throw new UnauthorizedAccessException();
+            }
+            var properToken = authToken[0].ToString();
             try
             {
-                if (AuthService.ValidateHmacSignedJWTToken(authContext))
-                {
-                    router = Builder.Build(authContext, serviceConfigID);
-                    router.Execute();
-                }
+                //grabs token's scope claim and puts it toString
+                var scope = AuthorizeJwtToken(properToken);
+                Router = Builder.Build(scope, serviceConfigID);
+                return Router.Execute();        
             }
             catch (UriFormatException e)
             {
@@ -44,9 +59,13 @@ namespace API.Managers
             }
             catch(InvalidInputException e)
             {
-
+                throw;
             }
-            catch (Exception e)
+            catch(UnauthorizedAccessException e)
+            {
+                throw;
+            }
+            catch(Exception e)
             {
                 throw;
             }
@@ -55,38 +74,19 @@ namespace API.Managers
 
         }
 
+        private string AuthorizeJwtToken(string authContext)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var properToken = handler.ReadJwtToken(authContext);
+            var scope = properToken.Claims.Select(c => new { c.Type, c.Value }).Where(c => c.Type == "scope").Select(c => c.Value).ToString();
+            if(scope is null)
+            {
+                throw new UnauthorizedAccessException("Invalid Token");
+            }
+            return scope;
 
-        //private HttpRequestMessage CraftHttpRequestMessage(string methodType, string action)
-        //{
-        //    HttpRequestMessage message;
-        //    switch (methodType){
-        //        case "HEAD":
-        //            message = new HttpRequestMessage(HttpMethod.Head, action);
-        //            break;
-        //        case "GET":
-        //            message = new HttpRequestMessage(HttpMethod.Get, action);
-        //            break;
-        //        case "POST":
-        //            message = new HttpRequestMessage(HttpMethod.Post, action);
-        //            break;
-        //        case "PUT":
-        //            message = new HttpRequestMessage(HttpMethod.Put, action);
-        //            break;
-        //        case "DELETE":
-        //            message = new HttpRequestMessage(HttpMethod.Delete, action);
-        //            break;
-        //        case "OPTIONS":
-        //            message = new HttpRequestMessage(HttpMethod.Options, action);
-        //            break;
-        //        case "TRACE":
-        //            message = new HttpRequestMessage(HttpMethod.Trace, action);
-        //            break;
-        //        default:
-        //            throw new InvalidInputException("MethodType was not a proper type");
-        //    }
+        }
 
-        //    return message;
-        //}
 
     }
 }

@@ -7,6 +7,7 @@ using System.Windows.Markup;
 using API.Managers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -16,33 +17,25 @@ using Microsoft.IdentityModel.Protocols.WSIdentity;
 
 namespace API_Gateway_Controllers.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class RoutingController : Controller
     {
-        public RoutingManager Manager { get; set; }
+        private readonly RoutingManager _manager;
         public RoutingController(RoutingManager manager)
         {
-            Manager = manager;
+            _manager = manager;
         }
       
         // api/<controller>/
         [RequireHttps]
         [Route("/{**catchAll}")]
-        public IActionResult Index(String actionFromUrl)
+        public IActionResult Index(string actionFromUrl)
         {
-            //actionFromUrl will contain all url after the api/controller/
-            var bodyString = Request.Body.ToString();
-            var httpMethod = Request.Method;
-            StringValues authToken;
-            Request.Headers.TryGetValue("Authorization", out authToken);
-            if (authToken.Count == 0)
-            {
-                return Unauthorized( "Unauthorized Access");
-            }
-
+           
             try
             {
-
+                return Ok(_manager.RouteExecute(Request));
             }
             catch (UriFormatException)
             {

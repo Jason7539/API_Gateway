@@ -1,5 +1,6 @@
 ﻿using API.Models.gateway;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.WSIdentity;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,15 +18,12 @@ namespace API.Services
     {
         public LLFireForgetBuilder() { }
 
-        public ILLRouter Build(String authContext, string serviceConfigId)
+        public ILLRouter Build(HttpRequest initialRequest, string clientId, string serviceConfigId)
         {
-
-            //fix how we find the client id here so we can compare properly
-            var clientID = authContext.User.FindFirst("ClientID")?.Value;
             string configData;
             using (var context = new ApiGatewayContext())
             {
-                configData = context.Configuration.Where(con => con.EndPoint.Equals(serviceConfigId)&& con.OpenTo.Equals(clientID)).Select(con=>con.Steps).ToString();
+                configData = context.Configuration.Where(con => con.EndPoint.Equals(serviceConfigId)&& con.OpenTo.Equals(clientId)).Select(con=>con.Steps).ToString();
             }
             //retrieving the data from the stepColumn of sql
             var stepColumn = JObject.Parse(configData);
@@ -35,6 +33,7 @@ namespace API.Services
             var array = JArray.Parse(configArray);
             var fireForgetRouter = new LLFireForgetRouterAsync(array.Count)
             {
+                InitialRequest = initialRequest,
                 ReturnStep = returnStep,
                 CallbackUrl = serviceConfigId
             };
@@ -44,8 +43,6 @@ namespace API.Services
                 IStep step = new Step
                 {
                     Async = (bool)setup.GetValue("Async"),
-                    //OutputRequired = (bool)setup.GetValue("OutputRequired"),
-                    //
                     ArrayParameterTypes = setup.GetValue("ParameterDataTypes").ToObject<string[]>(),
                     ArrayParameterNames = setup.GetValue("ParameterNames").ToObject<string[]>()
                 };
