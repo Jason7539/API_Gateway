@@ -28,13 +28,14 @@ namespace API.Managers
             Builder = builder;
         }
 
-        //change to use authService and accept the http request object
+        /// <summary>
+        /// This method accepts the httprequest object from the controller and attempts to both build and execute the route that corresponds with the request
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public HttpResponseMessage RouteExecute(HttpRequest message)
         {
-            //actionFromUrl will contain all url after the api/controller/
-            var bodyString = message.Body.ToString();
-            var httpMethod = message.Method;
-            
+            //actionFromUrl will contain all url after the api/controller/         
             StringValues authToken;
             message.Headers.TryGetValue("Authorization", out authToken);
             if (authToken.Count == 0)
@@ -46,7 +47,7 @@ namespace API.Managers
             {
                 //grabs token's scope claim and puts it toString
                 var scope = AuthorizeJwtToken(properToken);
-                Router = Builder.Build(scope, serviceConfigID);
+                Router = Builder.Build(message, scope);
                 return Router.Execute();        
             }
             catch (UriFormatException e)
@@ -74,6 +75,11 @@ namespace API.Managers
 
         }
 
+        /// <summary>
+        /// this private method separates the logic of finding the scope inside of the jwtToken
+        /// </summary>
+        /// <param name="authContext"></param>
+        /// <returns></returns>
         private string AuthorizeJwtToken(string authContext)
         {
             var handler = new JwtSecurityTokenHandler();

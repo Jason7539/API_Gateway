@@ -11,7 +11,7 @@ namespace API.Services
     /// </summary>
     public interface ILLBuilder
     {
-        ILLRouter Build(HttpRequest initialRequest, string authContext, string serviceConfigData);
+        ILLRouter Build(HttpRequest initialRequest, string authContext);
 
     }
 }

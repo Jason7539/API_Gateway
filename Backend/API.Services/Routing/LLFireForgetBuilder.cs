@@ -18,7 +18,7 @@ namespace API.Services
     {
         public LLFireForgetBuilder() { }
 
-        public ILLRouter Build(HttpRequest initialRequest, string clientId, string serviceConfigId)
+        public ILLRouter Build(HttpRequest initialRequest, string clientId)
         {
             string configData;
             using (var context = new ApiGatewayContext())

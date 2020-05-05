@@ -9,6 +9,7 @@
         id="RouteToAccess"
         v-model="RouteToAccess"
         label="Route To Access"
+        hint="Path Parameters must be surrounded with {}"
         :rules="RouteToAccessRules"
         required
       >
