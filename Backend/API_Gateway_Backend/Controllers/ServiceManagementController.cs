@@ -41,6 +41,7 @@ namespace API_Gateway_Controllers.Controllers
         [HttpGet("GetTeams")]
         [Produces("application/json")]
         public IActionResult GetTeams()
+
         {
             try
             {

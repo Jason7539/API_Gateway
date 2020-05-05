@@ -7,6 +7,21 @@ namespace API.Models.json
 {
     public class ServiceDisplayResp
     {
-        public ICollection<Service> Services { get; set; }
+        public string Endpoint { get; set; }
+        public string Username { get; set; }
+        public string Input { get; set; }
+        public string Output { get; set; }
+        public string Dataformat { get; set; }
+        public string Description { get; set; }
+
+        public ServiceDisplayResp(string  endpoint, string username, string input, string output, string dataformat, string description)
+        {
+            Endpoint = endpoint;
+            Username = username;
+            Input = input;
+            Output = output;
+            Dataformat = dataformat;
+            Description = description;
+        }
     }
 }
