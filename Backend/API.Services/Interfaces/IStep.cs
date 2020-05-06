@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Web.Mvc;
 
 namespace API.Services
 {
@@ -13,13 +14,13 @@ namespace API.Services
     {
         //IStep Next{get;set;}
         bool Async { get; set; }
-        //string Action { get; set; }
+        string Action { get; set; }
+        string HttpMethod { get; set; }
         //bool OutputRequired { get; set; }
-        //string HttpMethod { get; set; }
         string[] ArrayParameterTypes { get; set; }
         string[] ArrayParameterNames { get; set; }
         HttpRequestMessage Message { get; set; }
-        dynamic ExecuteStep(dynamic pastResult);
+        JsonResult ExecuteStep(JsonResult pastResult);
 
     }
 }

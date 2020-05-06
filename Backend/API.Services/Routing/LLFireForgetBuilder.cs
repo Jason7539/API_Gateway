@@ -1,13 +1,15 @@
 ﻿using API.Models.gateway;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.WSIdentity;
+using Microsoft.Diagnostics.Tracing.Parsers.MicrosoftWindowsWPF;
+using Microsoft.IdentityModel.Protocols.WSTrust;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
+
+
+
 
 namespace API.Services
 {
@@ -17,78 +19,83 @@ namespace API.Services
     public class LLFireForgetBuilder : ILLBuilder
     {
         public LLFireForgetBuilder() { }
-
+        
         public ILLRouter Build(HttpRequest initialRequest, string clientId)
         {
             string configData;
+            var action = initialRequest.Path;
+
             using (var context = new ApiGatewayContext())
             {
-                configData = context.Configuration.Where(con => con.EndPoint.Equals(serviceConfigId)&& con.OpenTo.Equals(clientId)).Select(con=>con.Steps).ToString();
-            }
-            //retrieving the data from the stepColumn of sql
-            var stepColumn = JObject.Parse(configData);
-            var returnStep = (int)stepColumn.GetValue("ReturnStep");
-            var configArray = stepColumn.GetValue("Configurations").ToString();
+                configData = context.Configuration.Where(con => CompareActions(action, con.EndPoint.ToString())
+                && con.OpenTo.Equals(clientId)).Select(con => con.Steps).ToString();
+                var stepColumn = JObject.Parse(configData);
 
-            var array = JArray.Parse(configArray);
-            var fireForgetRouter = new LLFireForgetRouterAsync(array.Count)
-            {
-                InitialRequest = initialRequest,
-                ReturnStep = returnStep,
-                CallbackUrl = serviceConfigId
-            };
-            var iter = 0;
-            foreach(JObject setup in array)
-            {
-                IStep step = new Step
+                //retrieving the data from the stepColumn of sql
+
+                var returnStep = (int)stepColumn.GetValue("ReturnStep");
+                var configArray = stepColumn.GetValue("Configurations").ToString();
+
+                var array = JArray.Parse(configArray);
+                var fireForgetRouter = new LLFireForgetRouterAsync(array.Count)
                 {
-                    Async = (bool)setup.GetValue("Async"),
-                    ArrayParameterTypes = setup.GetValue("ParameterDataTypes").ToObject<string[]>(),
-                    ArrayParameterNames = setup.GetValue("ParameterNames").ToObject<string[]>()
+                    InitialRequest = initialRequest,
+                    ReturnStep = returnStep,
                 };
-                var action = setup.GetValue("Action").ToString();
-                var method = setup.GetValue("HttpMethod").ToString();
-                step.Message = CraftHttpRequestMessage(method, action);
+                var iter = 0;
+                foreach (JObject setup in array)
+                {
+                    IStep step = new Step
+                    {
+                        Async = (bool)setup.GetValue("Async"),
+                        ArrayParameterTypes = setup.GetValue("ParameterDataTypes").ToObject<string[]>(),
+                        ArrayParameterNames = setup.GetValue("ParameterNames").ToObject<string[]>(),
+                        Action = setup.GetValue("Action").ToString(),
+                        HttpMethod = setup.GetValue("HttpMethod").ToString()
+                    };
+                    fireForgetRouter.Steps[iter] = step;
+                    iter++;
+                }
 
-                fireForgetRouter.Steps[iter] = step;
-                iter++;
+                return fireForgetRouter;
             }
-
-            return fireForgetRouter;
         }
 
-        private HttpRequestMessage CraftHttpRequestMessage(string methodType, string action)
+        /// <summary>
+        /// This method takes the initial requests uri and compares it to the dbquery stored uri to see if it is a match
+        /// Method allows for storage of path parameter based services in the future 
+        /// </summary>
+        /// <param name="request">Original Request uri</param>
+        /// <param name="dBaction">db query uri</param>
+        /// <returns>true if applicable, false if not</returns>
+        private bool CompareActions(string request, string dBaction)
         {
-            HttpRequestMessage message;
-            switch (methodType)
+            //trim off query parameters
+            if(request.IndexOf("?")> 0)
             {
-                case "HEAD":
-                    message = new HttpRequestMessage(HttpMethod.Head, action);
-                    break;
-                case "GET":
-                    message = new HttpRequestMessage(HttpMethod.Get, action);
-                    break;
-                case "POST":
-                    message = new HttpRequestMessage(HttpMethod.Post, action);
-                    break;
-                case "PUT":
-                    message = new HttpRequestMessage(HttpMethod.Put, action);
-                    break;
-                case "DELETE":
-                    message = new HttpRequestMessage(HttpMethod.Delete, action);
-                    break;
-                case "OPTIONS":
-                    message = new HttpRequestMessage(HttpMethod.Options, action);
-                    break;
-                case "TRACE":
-                    message = new HttpRequestMessage(HttpMethod.Trace, action);
-                    break;
-                default:
-                    throw new InvalidCastException("MethodType was not a proper type");
+                request = request.Substring(0, request.IndexOf("?"));
             }
-            return message;
+            if(dBaction.IndexOf("?")>0)
+            {
+                dBaction = dBaction.Substring(0, dBaction.IndexOf("?"));
+            }
+            char[] separator = { '/' };
+            string[] requestSplit =request.Split(separator);
+            string[] dBactionSplit = dBaction.Split(separator);
+
+            if (requestSplit.Length != dBactionSplit.Length)
+                return false;
+            for (int i = 0; i < dBactionSplit.Length; i++)
+            {
+                if (dBactionSplit[i].Contains('{') && dBactionSplit[i].Contains('}'))
+                    continue;
+                if (!dBactionSplit[i].Equals(requestSplit[i]))
+                    return false;
+            }
+            return true;
         }
 
+       
 
 
     }

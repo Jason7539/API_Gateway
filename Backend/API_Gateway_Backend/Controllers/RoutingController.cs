@@ -27,12 +27,18 @@ namespace API_Gateway_Controllers.Controllers
             _manager = manager;
         }
       
+
+        /// <summary>
+        /// Catch all Route To intercept all traffic to this controller.
+        /// Uses the manager contained in the constructor to return the results of its query
+        /// </summary>
+        /// <param name="actionFromUrl"></param>
+        /// <returns></returns>
         // api/<controller>/
         [RequireHttps]
         [Route("/{**catchAll}")]
-        public IActionResult Index(string actionFromUrl)
+        public IActionResult Index()
         {
-           
             try
             {
                 return Ok(_manager.RouteExecute(Request));

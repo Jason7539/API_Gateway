@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Web.Mvc;
 
 namespace API.Services
 {
@@ -13,7 +14,7 @@ namespace API.Services
     {
         IStep[] Steps { get; set; }
         int ReturnStep { get; set; }
-        string CallbackUrl { get; set; }
-        HttpResponseMessage Execute();
+        //string CallbackUrl { get; set; }
+        JsonResult Execute();
     }
 }

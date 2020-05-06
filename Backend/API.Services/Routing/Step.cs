@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Web.Helpers;
+using System.Web.Mvc;
 
 namespace API.Services
 {
@@ -12,42 +16,51 @@ namespace API.Services
     {
         //public IStep Next { get; set; }
         public bool Async { get; set; }
-        //public string Action { get; set; }
+        public string Action { get; set; }
         //public bool OutputRequired { get; set; }
         public string[] ArrayParameterTypes { get; set; }
         public string[] ArrayParameterNames { get; set; }
-        public IDictionary<string,object> ParameterPairings
-        { get; set; }
+        public string HttpMethod { get; set; }
+        //public IDictionary<string,object> ParameterPairings{ get; set; }
         public HttpRequestMessage Message { get; set; }
 
         public Step()
         {
-            ParameterPairings = new ExpandoObject();
+            //ParameterPairings = new ExpandoObject();
         }
 
-        public HttpContent CreateContent(dynamic content)
+        /// <summary>
+        /// Private method that scans the previous result of the steps and attempts to find any matching parameters to create the next json with 
+        /// 
+        /// </summary>
+        /// <param name="content"></param>
+        public StringContent CreateContent(String content)
         {
-            HttpContent httpContent = null;
-            if (content is object)
+
+            var dictionary = new Dictionary<string, dynamic>();
+            if (content != "")
             {
+                dictionary = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(content);
 
 
-                httpContent.Headers.Add("Accept","application/json");
+
+
+                var usableParams = JsonConvert.SerializeObject(dictionary);
+                return new StringContent(usableParams, Encoding.UTF8, "application/json");
             }
-
-            return httpContent;
+            return null;
+           
         }
 
-        public dynamic ExecuteStep(dynamic pastResult)
+        public JsonResult ExecuteStep(JsonResult pastResult)
         {
             using (var client = new HttpClient())
             {
-                var content = CreateContent(pastResult);
-                //ReferenceEquals(null,DynamicObjectName)  == nullcheck
+                CreateContent(pastResult);
 
                 if(!Async)
                 {
-
+                    
                     //sync code here
 
 
@@ -62,6 +75,10 @@ namespace API.Services
 
 
         }
+
+       
+        
+
 
     }
 }

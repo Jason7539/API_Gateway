@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Web.Mvc;
 
 namespace API.Managers
 {
@@ -33,7 +34,7 @@ namespace API.Managers
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public HttpResponseMessage RouteExecute(HttpRequest message)
+        public JsonResult RouteExecute(HttpRequest message)
         {
             //actionFromUrl will contain all url after the api/controller/         
             StringValues authToken;
@@ -43,28 +44,14 @@ namespace API.Managers
                 throw new UnauthorizedAccessException();
             }
             var properToken = authToken[0].ToString();
+
+            //various catches in order to log more specific exceptions
             try
             {
                 //grabs token's scope claim and puts it toString
                 var scope = AuthorizeJwtToken(properToken);
                 Router = Builder.Build(message, scope);
                 return Router.Execute();        
-            }
-            catch (UriFormatException e)
-            {
-                throw;
-            }
-            catch (InvalidCastException e)
-            {
-                throw;
-            }
-            catch(InvalidInputException e)
-            {
-                throw;
-            }
-            catch(UnauthorizedAccessException e)
-            {
-                throw;
             }
             catch(Exception e)
             {
@@ -82,6 +69,7 @@ namespace API.Managers
         /// <returns></returns>
         private string AuthorizeJwtToken(string authContext)
         {
+            //uses token handler to generate jwtToken from the given authorization header
             var handler = new JwtSecurityTokenHandler();
             var properToken = handler.ReadJwtToken(authContext);
             var scope = properToken.Claims.Select(c => new { c.Type, c.Value }).Where(c => c.Type == "scope").Select(c => c.Value).ToString();
