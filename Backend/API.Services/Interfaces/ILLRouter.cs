@@ -15,6 +15,6 @@ namespace API.Services
         IStep[] Steps { get; set; }
         int ReturnStep { get; set; }
         //string CallbackUrl { get; set; }
-        JsonResult Execute();
+        string Execute();
     }
 }

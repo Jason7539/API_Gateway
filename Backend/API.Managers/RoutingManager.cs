@@ -34,7 +34,7 @@ namespace API.Managers
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public JsonResult RouteExecute(HttpRequest message)
+        public string RouteExecute(HttpRequest message)
         {
             //actionFromUrl will contain all url after the api/controller/         
             StringValues authToken;
@@ -51,13 +51,15 @@ namespace API.Managers
                 //grabs token's scope claim and puts it toString
                 var scope = AuthorizeJwtToken(properToken);
                 Router = Builder.Build(message, scope);
-                return Router.Execute();        
+
+                var returnedStringJson= Router.Execute();        
+                ///TODO : return this json all the way up, set it up as a httpresponsemessage
             }
             catch(Exception e)
             {
                 throw;
             }
-            
+            return null;
 
 
         }

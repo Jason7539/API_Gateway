@@ -1,15 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
-using System.Web.Helpers;
-using System.Web.Mvc;
 
 namespace API.Services
 {
@@ -38,14 +31,13 @@ namespace API.Services
         public StringContent CreateContent(string content)
         {
 
-            var dictionary = new Dictionary<string, dynamic>();
             if (content != "")
             {
-                dictionary = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(content);
+                var dictionary = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(content);
 
-                foreach(var item in dictionary)
+                foreach (var item in dictionary)
                 {
-                    if(Array.IndexOf(ArrayParameterNames,item.Key) > 0)
+                    if (Array.IndexOf(ArrayParameterNames, item.Key) > 0)
                     {
                         var index = Array.IndexOf(ArrayParameterNames, item.Key);
 
@@ -57,19 +49,19 @@ namespace API.Services
                 return new StringContent(usableParams, Encoding.UTF8, "application/json");
             }
             return null;
-           
+
         }
 
-        public JsonResult ExecuteStep(JsonResult pastResult)
+
+        public string ExecuteStep(string pastResult)
         {
             using (var client = new HttpClient())
             {
-                var body = pastResult.Data.ToString();
-                var requestContent = CreateContent(body);
+                var requestContent = CreateContent(pastResult);
 
-                if(!Async)
+                if (!Async)
                 {
-                    
+
                     //sync code here
 
 
@@ -85,8 +77,8 @@ namespace API.Services
 
         }
 
-       
-        
+
+
 
 
     }

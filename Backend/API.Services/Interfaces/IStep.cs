@@ -20,7 +20,7 @@ namespace API.Services
         string[] ArrayParameterTypes { get; set; }
         string[] ArrayParameterNames { get; set; }
         HttpRequestMessage Message { get; set; }
-        JsonResult ExecuteStep(JsonResult pastResult);
+        string ExecuteStep(string pastResult);
 
     }
 }

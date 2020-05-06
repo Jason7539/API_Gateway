@@ -29,35 +29,33 @@ namespace API.Services
 
         /// <summary>
         /// Currently only can handle array of 1 step, but future implementations plan to hold the ability to handle multiple steps
-        /// returns jsonResult received from the Returning Step
+        /// returns string received from the Returning Step
         /// </summary>
         /// <returns></returns>
-        public JsonResult Execute()
+        public string Execute()
         {
             //turns initial request from controller into httpContent so it can be processed by the executeStep(httpcontent message) 
-            var message = CreateContent();
-
+            var content = CreateContent();
             for (int i = 0; i < Steps.Length; i++)
             {
-                message = Steps[i].ExecuteStep(message);
+                content = Steps[i].ExecuteStep(content);
                 if(i==ReturnStep)
                 {
-                    return message;
+                    return content;
                 }
             }
 
             return null;
         }
 
-        public StringContent CreateContent()
+        private string CreateContent()
         {
-            
             using (var bodyReader = new StreamReader(InitialRequest.Body))
             {
                 var bodyStr = bodyReader.ReadToEnd();
-                return new StringContent(bodyStr, Encoding.UTF8, "application/json");
+                return bodyStr;
             }
-            return null;
+            //return null;
         }
     }
 }
