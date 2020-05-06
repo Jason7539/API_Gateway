@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using System;
@@ -34,7 +35,7 @@ namespace API.Services
         /// 
         /// </summary>
         /// <param name="content"></param>
-        public StringContent CreateContent(String content)
+        public StringContent CreateContent(string content)
         {
 
             var dictionary = new Dictionary<string, dynamic>();
@@ -42,7 +43,14 @@ namespace API.Services
             {
                 dictionary = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(content);
 
+                foreach(var item in dictionary)
+                {
+                    if(Array.IndexOf(ArrayParameterNames,item.Key) > 0)
+                    {
+                        var index = Array.IndexOf(ArrayParameterNames, item.Key);
 
+                    }
+                }
 
 
                 var usableParams = JsonConvert.SerializeObject(dictionary);
@@ -56,7 +64,8 @@ namespace API.Services
         {
             using (var client = new HttpClient())
             {
-                CreateContent(pastResult);
+                var body = pastResult.Data.ToString();
+                var requestContent = CreateContent(body);
 
                 if(!Async)
                 {

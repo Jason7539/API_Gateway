@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Web.Mvc;
@@ -34,7 +35,7 @@ namespace API.Services
         public JsonResult Execute()
         {
             //turns initial request from controller into httpContent so it can be processed by the executeStep(httpcontent message) 
-            var message = CreateContent(InitialRequest.Body.Read);
+            var message = CreateContent();
 
             for (int i = 0; i < Steps.Length; i++)
             {
@@ -48,9 +49,15 @@ namespace API.Services
             return null;
         }
 
-        private StringContent CreateContent()
+        public StringContent CreateContent()
         {
-
+            
+            using (var bodyReader = new StreamReader(InitialRequest.Body))
+            {
+                var bodyStr = bodyReader.ReadToEnd();
+                return new StringContent(bodyStr, Encoding.UTF8, "application/json");
+            }
+            return null;
         }
     }
 }
